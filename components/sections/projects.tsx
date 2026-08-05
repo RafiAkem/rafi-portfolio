@@ -77,7 +77,7 @@ function Entry({
               href={project.live}
               target="_blank"
               rel="noreferrer"
-              className="transition-colors duration-300 group-hover:text-accent after:absolute after:inset-0"
+              className="transition-colors duration-300 group-hover:text-accent"
             >
               {project.title}
             </a>
@@ -94,7 +94,12 @@ function Entry({
                 <li key={tag}>{tag}</li>
               ))}
             </ul>
-            <span className="folio-caps ml-auto inline-flex items-center gap-1.5 transition-colors duration-300 group-hover:text-accent">
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noreferrer"
+              className="folio-caps ml-auto inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-accent group-hover:text-accent"
+            >
               Lihat situs
               <ArrowUpRight
                 size={11}
@@ -102,7 +107,7 @@ function Entry({
                 aria-hidden
                 className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               />
-            </span>
+            </a>
           </div>
         </div>
       </div>
