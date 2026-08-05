@@ -3,11 +3,6 @@ import { profile } from "@/lib/content";
 import { getGithubStats } from "@/lib/github";
 import {
   buildPlate,
-  longDate,
-  megabytes,
-  percent,
-  thousands,
-  topLanguages,
 } from "@/lib/contributions";
 import { Reveal } from "@/components/reveal";
 import { ContributionPlate } from "@/components/contribution-plate";
@@ -33,8 +28,6 @@ import { ContributionPlate } from "@/components/contribution-plate";
 export async function CodeLog() {
   const stats = await getGithubStats();
   const plate = buildPlate(stats.days);
-  const { head, rest } = topLanguages(stats.languages);
-  const rows = rest ? [...head, rest] : head;
 
   return (
     <section
@@ -89,74 +82,6 @@ export async function CodeLog() {
         </div>
       </Reveal>
 
-      <div className="mt-16 grid gap-12 border-t border-border pt-8 lg:mt-20 lg:grid-cols-12 lg:gap-10">
-        <Reveal className="lg:col-span-7">
-          <h3 className="display-sm text-[1.25rem]">Komposisi bahasa</h3>
-
-          {/* A ruler, not a bar chart: a hairline the full width of the column
-              with the measured span inked over it, the way a printed table
-              rules its own figures. */}
-          <table className="mt-7 w-full border-collapse">
-            <caption className="sr-only">
-              Komposisi bahasa berdasarkan volume kode di {stats.publicRepos} repositori
-              publik non-fork
-            </caption>
-            <thead className="sr-only">
-              <tr>
-                <th scope="col">Bahasa</th>
-                <th scope="col">Porsi</th>
-                <th scope="col">Volume</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((language) => (
-                <tr key={language.name} className="group align-middle">
-                  <th
-                    scope="row"
-                    className="w-[9.5rem] py-3 pr-4 text-left text-[1rem] font-normal transition-colors duration-200 group-hover:text-accent"
-                  >
-                    {language.name}
-                  </th>
-                  <td className="py-3">
-                    <span className="relative block h-px w-full bg-border">
-                      <span
-                        className="absolute left-0 top-1/2 block h-[2px] -translate-y-1/2 bg-accent transition-[height] duration-200 group-hover:h-[3px]"
-                        style={{ width: `${Math.max(language.share * 100, 0.4)}%` }}
-                      />
-                    </span>
-                  </td>
-                  <td className="folio w-[4.5rem] py-3 pl-4 text-right tabular-nums text-muted">
-                    {percent(language.share)}%
-                    <span className="sr-only">, {thousands(language.bytes)} byte</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* The base every percentage above is a share of. A percentage
-              printed without its denominator is the most respectable-looking
-              lie available in a chart. */}
-          <p className="measure folio mt-6 border-t border-border pt-4 text-faint">
-            Dihitung dari volume kode ({thousands(stats.totalBytes)} byte,{" "}
-            {megabytes(stats.totalBytes)}) di {stats.publicRepos} repositori publik
-            non-fork, bukan dari jumlah repositori, yang akan didominasi berkas
-            latihan kuliah.
-          </p>
-        </Reveal>
-
-        <Reveal delay={0.06} className="lg:col-span-4 lg:col-start-9">
-          <p className="measure-tight text-[1.0625rem] leading-[1.7]">
-            Setengahnya TypeScript dan seperlimanya PHP: Next.js di sisi antarmuka,
-            Laravel di sisi server. Sisanya C#, ShaderLab, dan HLSL, yang datang dari
-            proyek Unity di luar kerja web.
-          </p>
-
-          <p className="folio mt-8 border-t border-border pt-4 text-faint">
-            Sumber: GitHub API. Terakhir dibaca {longDate(stats.capturedAt)}.
-          </p>
-        </Reveal>
-      </div>
     </section>
   );
 }
