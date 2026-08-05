@@ -2,13 +2,15 @@ import { NextResponse } from "next/server";
 
 type Payload = { nama?: string; email?: string; pesan?: string };
 
+const CONTACT_TO = process.env.CONTACT_TO ?? "yc66zio@gmail.com";
+const CONTACT_FROM =
+  process.env.CONTACT_FROM ?? "onboarding@resend.dev"; // sandbox; ganti setelah verifikasi domain
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
 /**
- * Validates the contact form server side and hands the message off.
- *
- * TODO: wire an actual delivery step here (Resend, Nodemailer, a Google Sheet,
- * whatever Rafi prefers). Until then the message is only logged, so the
- * success state the visitor sees is honest about reaching the server but the
- * mail never leaves the box.
+ * Validates the contact form server side and delivers the message via the
+ * Resend API (https://resend.com). Requires RESEND_API_KEY in the
+ * environment; see .env.example.
  */
 export async function POST(request: Request) {
   let body: Payload;
@@ -31,7 +33,52 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Isian belum lengkap." }, { status: 422 });
   }
 
-  console.log("[kontak]", { nama, email, panjangPesan: pesan.length });
+  if (!RESEND_API_KEY) {
+    console.error("[kontak] RESEND_API_KEY belum di-set di environment.");
+    return NextResponse.json(
+      { error: "Server email belum dikonfigurasi." },
+      { status: 500 },
+    );
+  }
+
+  const html = `
+    <p><strong>Nama:</strong> ${escapeHtml(nama)}</p>
+    <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+    <p><strong>Pesan:</strong></p>
+    <p>${escapeHtml(pesan).replace(/\n/g, "<br>")}</p>
+  `;
+
+  const resend = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: CONTACT_FROM,
+      to: CONTACT_TO,
+      reply_to: email,
+      subject: `[Kontak Portfolio] ${nama}`,
+      html,
+    }),
+  });
+
+  if (!resend.ok) {
+    console.error("[kontak] Resend menolak:", resend.status, await resend.text());
+    return NextResponse.json(
+      { error: "Pesan gagal dikirim." },
+      { status: 502 },
+    );
+  }
 
   return NextResponse.json({ ok: true });
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
