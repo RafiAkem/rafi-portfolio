@@ -282,9 +282,17 @@ export function Hero() {
 
               {/* Caption for the plate above. The link itself carries the same
                   text for assistive tech, so this echo is hidden from it. */}
-              <p
+              {/* Echo visual dari link card. Dijadikan link nyata (pointer/mobile
+                  tap target), tapi di-sembunyikan dari keyboard + screen reader
+                  (tabIndex=-1 + aria-hidden) karena link card udah bawa
+                  aria-label yang sama. */}
+              <a
+                href={active.live}
+                target="_blank"
+                rel="noreferrer"
                 aria-hidden
-                className="folio-caps mt-5 flex items-baseline gap-3 border-t border-border pt-3 pr-9 text-faint"
+                tabIndex={-1}
+                className="folio-caps mt-5 flex items-baseline gap-3 border-t border-border pt-3 pr-9 text-faint transition-colors duration-300 hover:text-accent"
               >
                 <motion.span
                   key={active.slug}
@@ -300,7 +308,7 @@ export function Hero() {
                   Lihat situs
                   <ArrowUpRight size={11} weight="bold" />
                 </span>
-              </p>
+              </a>
             </motion.div>
           </motion.div>
         </div>
