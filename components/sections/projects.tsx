@@ -73,14 +73,9 @@ function Entry({
               lead ? "text-[clamp(1.75rem,3vw,2.5rem)]" : "text-[1.625rem]"
             }`}
           >
-            <a
-              href={project.live}
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors duration-300 group-hover:text-accent"
-            >
+            <span className="transition-colors duration-300 group-hover:text-accent">
               {project.title}
-            </a>
+            </span>
           </h3>
         </div>
 
@@ -94,12 +89,7 @@ function Entry({
                 <li key={tag}>{tag}</li>
               ))}
             </ul>
-            <a
-              href={project.live}
-              target="_blank"
-              rel="noreferrer"
-              className="folio-caps ml-auto inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-accent group-hover:text-accent"
-            >
+            <span className="folio-caps ml-auto inline-flex items-center gap-1.5 transition-colors duration-300 group-hover:text-accent">
               Lihat situs
               <ArrowUpRight
                 size={11}
@@ -107,10 +97,21 @@ function Entry({
                 aria-hidden
                 className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               />
-            </a>
+            </span>
           </div>
         </div>
       </div>
+
+      {/* Seluruh card = satu link (stretched link). Target tap paling natural,
+          terutama di mobile, adalah gambarnya — jadi seluruh area harus bisa
+          dipencet, bukan cuma teksnya. */}
+      <a
+        href={project.live}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`Buka situs ${project.title}`}
+        className="absolute inset-0 z-10 rounded-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      />
     </article>
   );
 }
