@@ -1,0 +1,155 @@
+import type { Metadata, Viewport } from "next";
+import { Geist_Mono, Newsreader } from "next/font/google";
+import { education, profile } from "@/lib/content";
+import "./globals.css";
+
+/**
+ * One serif, one mono.
+ *
+ * Newsreader carries both the display and the body. It has a real optical
+ * size axis, so the headline is set at opsz 72 weight 300 and the body at
+ * opsz 16 weight 400: the contrast comes from the axes rather than from a
+ * second face, which is both sharper typographically and one fewer woff2 to
+ * download. It is deliberately not Bodoni Moda, Playfair, Fraunces or
+ * Instrument Serif, the faces every editorial page reaches for first.
+ */
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+/** Everything that gets scanned instead of read: folios, dates, tags, controls. */
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// TODO: ganti ke domain final sebelum launch. Nilai ini dipakai untuk URL
+// absolut di kartu Open Graph, jadi kartu share ikut salah kalau masih dummy.
+const SITE_URL = "https://rafihakim.dev";
+
+// Kept under about 60 characters so search results do not truncate it, and
+// front-loaded with the name because that is the query most people arrive on.
+const TITLE = `${profile.name} - ${profile.role}`;
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: { default: TITLE, template: `%s - ${profile.name}` },
+  description: profile.metaDescription,
+  applicationName: profile.name,
+  authors: [{ name: profile.name, url: profile.github }],
+  creator: profile.name,
+  keywords: [
+    "Rafi Ikhsanul Hakim",
+    "fullstack developer Bandung",
+    "frontend developer Indonesia",
+    "web developer Bandung",
+    "Next.js developer",
+    "React developer",
+    "Laravel developer",
+    "TypeScript",
+    "AI developer Indonesia",
+    "sistem berbasis AI",
+    "aplikasi web",
+    "produk pembelajaran berbasis AI",
+    "Teknik Informatika Universitas Pasundan",
+    "portofolio web developer",
+  ],
+  category: "technology",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: TITLE,
+    description: profile.metaDescription,
+    url: SITE_URL,
+    siteName: profile.name,
+    type: "profile",
+    firstName: "Rafi Ikhsanul",
+    lastName: "Hakim",
+    username: profile.handle,
+    locale: "id_ID",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: profile.metaDescription,
+    creator: `@${profile.handle}`,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f3f1ea" },
+    { media: "(prefers-color-scheme: dark)", color: "#14130f" },
+  ],
+};
+
+/** Structured data, so search results can show the person rather than a page. */
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: profile.name,
+  alternateName: profile.handle,
+  jobTitle: profile.role,
+  description: profile.metaDescription,
+  email: `mailto:${profile.email}`,
+  url: SITE_URL,
+  image: `${SITE_URL}${profile.portraitPath}`,
+  sameAs: [profile.github, profile.linkedin, profile.blog],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Bandung",
+    addressRegion: "Jawa Barat",
+    addressCountry: "ID",
+  },
+  alumniOf: { "@type": "CollegeOrUniversity", name: education.school },
+  knowsAbout: [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Laravel",
+    "PostgreSQL",
+    "pgvector",
+    "Retrieval Augmented Generation",
+    "Frontend Development",
+  ],
+  knowsLanguage: ["id", "en"],
+};
+
+/**
+ * Runs before first paint so a dark-mode visitor never sees a white flash.
+ * Reads the saved choice first, falls back to the system preference.
+ */
+const themeInit = `(function(){try{var s=localStorage.getItem("theme");var d=s?s==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;if(d)document.documentElement.classList.add("dark")}catch(e){}})();`;
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="id" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+      </head>
+      <body className={`${newsreader.variable} ${geistMono.variable}`}>
+        <a
+          href="#konten"
+          className="folio-caps sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-accent focus:px-4 focus:py-2 focus:text-on-accent"
+        >
+          Lompat ke konten
+        </a>
+        {children}
+      </body>
+    </html>
+  );
+}

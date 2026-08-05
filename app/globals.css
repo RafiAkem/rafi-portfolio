@@ -1,0 +1,362 @@
+@import "tailwindcss";
+
+/* Dark mode is class-driven so the manual toggle can override the system
+   preference. The pre-paint script in layout.tsx sets .dark before first paint. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   TOKENS
+
+   Palette lock: warm paper and ink, with exactly one accent, a deep pine.
+   Rust (--plate) is NOT a second accent. It is reserved for the plate numerals
+   in the projects section and appears nowhere else on the page.
+
+   Shape lock: 2px, everywhere, on everything. Rules and whitespace do the
+   separating work, which means no cards, no pills, and no shadows at all.
+
+   Type lock: ONE serif and one mono. Display and text are the same family
+   pulled apart by optical size and weight rather than by a second face, which
+   is why there is no display serif here to fight the text serif.
+--------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+
+  --bg: #f3f1ea;
+  --surface: #eae7dc;
+  --surface-raised: #fbfaf6;
+  --border: #dcd7c9;
+  --border-strong: #b3ab97;
+  --text: #17150f;
+  --text-muted: #555147;
+  --text-faint: #6f6a5c;
+
+  --accent: #1d4e3f;
+  --accent-hover: #123528;
+  --accent-quiet: #e2eae4;
+  --on-accent: #f3f1ea;
+
+  /* Projects section plate numerals. Nothing else. */
+  --plate: #b4402a;
+
+  --danger: #9e2b15;
+
+  /* Two measures for the whole page. Body copy uses one, standfirsts and
+     captions the other. Ad hoc max-widths per section are what make a layout
+     read as unedited. */
+  --measure: 62ch;
+  --measure-tight: 46ch;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --bg: #14130f;
+  --surface: #1c1a15;
+  --surface-raised: #211e18;
+  --border: #322e26;
+  --border-strong: #4e483c;
+  --text: #f3f1ea;
+  --text-muted: #aaa395;
+  --text-faint: #8b8476;
+
+  --accent: #74c4a5;
+  --accent-hover: #93d8bc;
+  --accent-quiet: #16241d;
+  --on-accent: #0d1712;
+
+  --plate: #e2795e;
+
+  --danger: #ef8168;
+}
+
+/* Radii are theme-independent, so they are literal rather than inline vars.
+   One value for the whole page: paper does not have rounded corners. */
+@theme {
+  --radius-surface: 2px;
+  --radius-control: 2px;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-quiet: var(--accent-quiet);
+  --color-on-accent: var(--on-accent);
+  --color-plate: var(--plate);
+  --color-danger: var(--danger);
+
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  /* font-sans resolves to the serif rather than leaving a third family lying
+     around for someone to reach for. */
+  --font-sans: var(--font-newsreader), ui-serif, Georgia, serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    /* Lenis owns smooth scrolling. Native smooth behaviour would fight it,
+       so it stays off and only returns under reduced motion (below). */
+    scroll-behavior: auto;
+    /* Running head is 60px; keep anchored sections clear of it. */
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Lenis base styles, inlined rather than importing the package stylesheet. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis:not(.lenis-autoToggle).lenis-stopped {
+    overflow: clip;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  body {
+    /* next/font declares --font-newsreader and --font-geist-mono on this
+       element via its generated class. The @theme inline tokens above are
+       inlined into Tailwind utilities and are NOT emitted as real custom
+       properties, so hand-written rules cannot read them. These two aliases
+       are declared here, where the next/font variables actually exist, and
+       every descendant inherits them. */
+    --serif: var(--font-newsreader), ui-serif, Georgia, serif;
+    --mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    /* Text optical size. Newsreader draws sturdier stems and looser fit down
+       here, which is what keeps 17px readable. The display sizes override it. */
+    font-variation-settings: "opsz" 16;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures contextual;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Light type on a dark ground reads heavier than the same weight on paper,
+     so the night edition steps the text weight back down. */
+  .dark body {
+    font-weight: 360;
+  }
+
+  p {
+    /* Keeps single words off their own last line without the reflow cost of
+       balancing every paragraph. */
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 0;
+  }
+}
+
+@layer components {
+  /* ------------------------------------------------------------------
+     DISPLAY
+
+     Same family as the body. The separation is optical size plus weight:
+     at opsz 72 Newsreader thins its hairlines and tightens its fit into a
+     true display cut, and 300 against the body's 400 is the weight contrast.
+     Tracking stays near zero. Negative tracking is a grotesque habit and it
+     closes up a serif's counters.
+  ------------------------------------------------------------------ */
+  .display {
+    font-variation-settings: "opsz" 72, "wght" 300;
+    letter-spacing: -0.005em;
+    line-height: 1.06;
+    text-wrap: balance;
+  }
+
+  .dark .display {
+    /* Weight and spacing compensation for light-on-dark. */
+    font-variation-settings: "opsz" 72, "wght" 330;
+    letter-spacing: 0.004em;
+  }
+
+  /* Subheads: project titles, job titles. Large enough to want a display cut,
+     small enough that opsz 72 would leave the hairlines too fine. */
+  .display-sm {
+    font-variation-settings: "opsz" 32, "wght" 400;
+    letter-spacing: -0.002em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .dark .display-sm {
+    font-variation-settings: "opsz" 32, "wght" 380;
+  }
+
+  /* ------------------------------------------------------------------
+     FOLIO
+
+     Mono, for anything scanned rather than read: dates, tags, controls.
+     Two cuts. Sentence case is the default so the page is not shouting;
+     the caps variant is reserved for true labels.
+  ------------------------------------------------------------------ */
+  .folio {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .folio-caps {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.11em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .measure {
+    max-width: var(--measure);
+  }
+
+  .measure-tight {
+    max-width: var(--measure-tight);
+  }
+
+  /* Opening paragraph of the about section reads like a printed page. The
+     negative left margin is optical alignment: the cap's own sidebearing
+     would otherwise indent it away from the column edge. */
+  .dropcap::first-letter {
+    float: left;
+    font-variation-settings: "opsz" 72, "wght" 300;
+    font-size: 3.1em;
+    line-height: 0.84;
+    margin-left: -0.045em;
+    padding-right: 0.07em;
+    padding-top: 0.04em;
+    color: var(--text);
+  }
+
+  /* ------------------------------------------------------------------
+     INK PLATE
+
+     The contribution year drawn as a halftone screen rather than as the
+     five-tint scale GitHub uses. One ink at full strength, with density
+     carried by dot SIZE alone. That is how a press actually varies tone,
+     and it keeps the single-accent lock intact: no second colour enters
+     the page to draw a chart.
+
+     The empty step is a visible speck in the rule colour, never bare
+     paper. A day with no work is a measured zero and has to look like a
+     printed zero, not like a hole in the data.
+
+     Budget: 365 cells, one element each, no transforms and no per-cell
+     inline styles. Everything below is static CSS keyed off one attribute.
+  ------------------------------------------------------------------ */
+  /* The cell geometry is declared on the wrapper, not the grid, so the month
+     bracket underneath can position itself with the same two variables in a
+     calc() and stay locked to the columns at every width. */
+  .plate-sheet {
+    /* Sized so 53 columns plus their gaps clear the section's own padding:
+       53 cells + 52 gaps at 0.17 each is 61.8 cells wide, and the divisor
+       leaves a little over that for the scrollbar. */
+    --cell: clamp(7px, calc((100vw - 5rem) / 63), 17px);
+    --gap: max(1px, calc(var(--cell) * 0.17));
+  }
+
+  .plate {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, var(--cell));
+    gap: var(--gap);
+  }
+
+  .plate > span {
+    display: block;
+    width: var(--cell);
+    height: var(--cell);
+    border-radius: 1px;
+    background-color: var(--accent);
+    /* An inset ring of paper eating in from every edge. This draws a centred
+       dot with one element, no pseudo-element and no transform. */
+    box-shadow: inset 0 0 0 var(--eat) var(--bg);
+  }
+
+  .plate > span[data-l="0"] {
+    background-color: var(--border-strong);
+    --eat: calc(var(--cell) * 0.34);
+  }
+  .plate > span[data-l="1"] { --eat: calc(var(--cell) * 0.28); }
+  .plate > span[data-l="2"] { --eat: calc(var(--cell) * 0.19); }
+  .plate > span[data-l="3"] { --eat: calc(var(--cell) * 0.09); }
+  .plate > span[data-l="4"] { --eat: 0px; }
+
+  /* Leading blanks when the year does not start on a Sunday. */
+  .plate > span[data-pad] {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .plate > span:hover {
+    outline: 1px solid var(--text);
+    outline-offset: 1px;
+  }
+
+  /* Underlined field, the print alternative to a boxed input. The rule
+     thickens and turns accent on focus so the state is never colour-only. */
+  .field {
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--border-strong);
+    padding: 0.5rem 0 0.6rem;
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .field::placeholder {
+    color: var(--text-faint);
+  }
+
+  .field:focus {
+    outline: none;
+    border-bottom-color: var(--accent);
+    box-shadow: inset 0 -1px 0 0 var(--accent);
+  }
+
+  .field[aria-invalid="true"] {
+    border-bottom-color: var(--danger);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
