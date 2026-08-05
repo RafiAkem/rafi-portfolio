@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { List, X } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { nav, profile } from "@/lib/content";
@@ -12,7 +12,28 @@ import { ThemeToggle } from "./theme-toggle";
  */
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState<string | null>(null);
   const reduce = useReducedMotion();
+
+  // Scrollspy. An IntersectionObserver band sits just below the running head,
+  // so a section is current while it fills the upper half of the viewport.
+  // No scroll listener; works under reduced motion.
+  useEffect(() => {
+    const sections = nav
+      .map((item) => document.getElementById(item.href.slice(1)))
+      .filter((el): el is HTMLElement => el !== null);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(`#${entry.target.id}`);
+        }
+      },
+      { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-sm">
@@ -26,7 +47,9 @@ export function SiteNav() {
             <a
               key={item.href}
               href={item.href}
-              className="folio text-muted transition-colors duration-200 hover:text-accent"
+              className={`folio transition-colors duration-200 hover:text-accent ${
+                active === item.href ? "text-accent" : "text-muted"
+              }`}
             >
               {item.label}
             </a>
@@ -78,7 +101,9 @@ export function SiteNav() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="folio border-b border-border py-4 text-muted transition-colors hover:text-accent"
+                  className={`folio border-b border-border py-4 transition-colors hover:text-accent ${
+                    active === item.href ? "text-accent" : "text-muted"
+                  }`}
                 >
                   {item.label}
                 </a>

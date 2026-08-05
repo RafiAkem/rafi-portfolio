@@ -27,9 +27,8 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// TODO: ganti ke domain final sebelum launch. Nilai ini dipakai untuk URL
-// absolut di kartu Open Graph, jadi kartu share ikut salah kalau masih dummy.
-const SITE_URL = "https://rafihakim.dev";
+// URL absolut untuk kartu Open Graph dan JSON-LD. Root domain, bukan sub.
+const SITE_URL = "https://rafiakem.tech";
 
 // Kept under about 60 characters so search results do not truncate it, and
 // front-loaded with the name because that is the query most people arrive on.

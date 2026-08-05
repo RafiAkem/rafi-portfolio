@@ -127,7 +127,7 @@ export async function CodeLog() {
                   </td>
                   <td className="folio w-[4.5rem] py-3 pl-4 text-right tabular-nums text-muted">
                     {percent(language.share)}%
-                    <span className="sr-only"> — {thousands(language.bytes)} byte</span>
+                    <span className="sr-only">, {thousands(language.bytes)} byte</span>
                   </td>
                 </tr>
               ))}
@@ -140,7 +140,7 @@ export async function CodeLog() {
           <p className="measure folio mt-6 border-t border-border pt-4 text-faint">
             Dihitung dari volume kode ({thousands(stats.totalBytes)} byte,{" "}
             {megabytes(stats.totalBytes)}) di {stats.publicRepos} repositori publik
-            non-fork — bukan dari jumlah repositori, yang akan didominasi berkas
+            non-fork, bukan dari jumlah repositori, yang akan didominasi berkas
             latihan kuliah.
           </p>
         </Reveal>

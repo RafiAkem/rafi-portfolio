@@ -77,7 +77,7 @@ export function ContributionPlate({
     <div>
       <p className="folio text-muted">
         <span className="text-text">{totalContributions} kontribusi</span>
-        {` · ${activeDays} hari aktif · ${shortDate(rangeStart)} – ${shortDate(rangeEnd)}`}
+        {` · ${activeDays} hari aktif · ${shortDate(rangeStart)} hingga ${shortDate(rangeEnd)}`}
       </p>
 
       {/* The fine plate. Pointer-only by design; the bars below are the
