@@ -4,9 +4,10 @@ import { Reveal } from "@/components/reveal";
 import { ParallaxImage } from "@/components/parallax-image";
 
 /**
- * Three plates. The lead runs the full measure, then the pair below splits
+ * Four plates. The lead runs the full measure, then the pair below splits
  * seven and five and the narrow one drops a step, so the section reads as a
- * spread instead of a repeated row.
+ * spread instead of a repeated row. The closing plate runs full measure again
+ * so the newest product gets the same banner treatment as the lead.
  */
 const LAYOUT = [
   {
@@ -28,6 +29,12 @@ const LAYOUT = [
     ratio: "aspect-[16/10]",
     sizes: "(max-width: 1024px) 100vw, 36vw",
     lead: false,
+  },
+  {
+    cell: "lg:col-span-12",
+    ratio: "aspect-[21/9]",
+    sizes: "(max-width: 1024px) 100vw, 88vw",
+    lead: true,
   },
 ] as const;
 

@@ -7,6 +7,7 @@ import type { StaticImageData } from "next/image";
  */
 import mangmicroShot from "@/public/projects/mangmicro.webp";
 import mangquizShot from "@/public/projects/mangquiz.webp";
+import mangragShot from "@/public/projects/mangrag.webp";
 import ramblingsShot from "@/public/projects/akem-ramblings.webp";
 import portraitShot from "@/public/rafi.jpg";
 
@@ -158,6 +159,18 @@ export const projects: readonly Project[] = [
     imageAlt: "Halaman depan Akem's Ramblings dengan judul dan tulisan terbaru",
     live: "https://akemramblings.dev",
   },
+  {
+    slug: "mangrag",
+    title: "MangRAG",
+    kind: "RAG SaaS",
+    summary:
+      "SaaS untuk membuat chatbot RAG yang dipasang klien lewat satu baris snippet: upload PDF, sistem membangun knowledge base, dan jawaban selalu menyertakan sitasi sumber. Dilengkapi rate limit lintas instance, autentikasi multi-user, dan skor kesiapan bot.",
+    tags: ["Next.js", "Supabase", "Gemini", "RAG"],
+    year: "2026",
+    image: mangragShot,
+    imageAlt: "Halaman depan MangRAG dengan hero dan demo chatbot",
+    live: "https://mangrag.vercel.app",
+  },
 ];
 
 export type ExperienceItem = {
@@ -239,4 +252,4 @@ export const contact = {
 } as const;
 
 export const projectsIntro =
-  "Tiga produk yang sudah dirilis dan dapat diakses publik. Dua di antaranya berkaitan dengan cara belajar, satu dengan cara menulis. Seluruh prosesnya saya kerjakan sendiri, dari desain antarmuka hingga deployment." as const;
+  "Empat produk yang sudah dirilis dan dapat diakses publik. Dua berkaitan dengan cara belajar, satu dengan cara menulis, dan satu untuk tim yang membangun chatbot bagi kliennya. Seluruh prosesnya saya kerjakan sendiri, dari desain antarmuka hingga deployment." as const;
