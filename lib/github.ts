@@ -52,8 +52,12 @@ export type GithubStats = {
   days: ContributionDay[];
 };
 
-/** Six hours. Contribution counts do not move fast enough to justify less. */
-const REVALIDATE_SECONDS = 60 * 60 * 6;
+/**
+ * Five minutes. GitHub records a push within a minute or two, so this keeps
+ * the graph within a single revalidation of "live" while staying far under
+ * the 5000-request/hour authenticated GraphQL budget (12 req/jam per feed).
+ */
+const REVALIDATE_SECONDS = 60 * 5;
 
 const QUERY = `
   query ($login: String!) {
