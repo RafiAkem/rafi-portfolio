@@ -176,6 +176,33 @@
 
 @layer components {
   /* ------------------------------------------------------------------
+     THEME SWITCH
+
+     ThemeToggle runs document.startViewTransition, so the browser
+     snapshot the old theme, flips .dark, then crossfades the two
+     frames. 0.3s is long enough to read as a smooth reveal without
+     washing out the paper texture, and nothing but the root moves:
+     the 365-cell plate stays put under the crossfade.
+
+     Browsers without the API and reduced-motion users (guarded in
+     theme-toggle.tsx) fall back to an instant flip.
+  ------------------------------------------------------------------ */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.3s;
+    animation-timing-function: ease;
+  }
+
+  /* Double guard: if the API is reached while the OS asks for less
+     motion, kill the animation rather than respect its duration. */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
+
+  /* ------------------------------------------------------------------
      DISPLAY
 
      Same family as the body. The separation is optical size plus weight:
