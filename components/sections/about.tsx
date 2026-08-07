@@ -1,8 +1,13 @@
+"use client";
+
 import Image from "next/image";
-import { about, profile } from "@/lib/content";
+import { profile } from "@/lib/content";
+import { useLang } from "@/components/lang-provider";
 import { Reveal } from "@/components/reveal";
 
 export function About() {
+  const { t } = useLang();
+
   return (
     <section
       id="tentang"
@@ -12,7 +17,7 @@ export function About() {
         {/* Section headings sit a step below the hero. A section head set
             larger than the page's own headline inverts the hierarchy. */}
         <h2 className="display border-b border-border pb-6 text-[clamp(1.625rem,3.4vw,2.75rem)]">
-          {about.heading}
+          {t.about.heading}
         </h2>
       </Reveal>
 
@@ -23,7 +28,7 @@ export function About() {
           <figure className="max-w-[300px]">
             <Image
               src={profile.portrait}
-              alt={profile.portraitAlt}
+              alt={t.portraitAlt}
               placeholder="blur"
               sizes="(max-width: 1024px) 55vw, 300px"
               className="aspect-square w-full rounded-surface border border-border-strong object-cover"
@@ -31,7 +36,7 @@ export function About() {
             <figcaption className="folio mt-3 border-t border-border pt-3 text-muted">
               {profile.name}
               <br />
-              {profile.city}
+              {t.city}
             </figcaption>
           </figure>
         </Reveal>
@@ -39,7 +44,7 @@ export function About() {
         <div className="lg:col-span-7 lg:col-start-6">
           <Reveal>
             <div className="space-y-6">
-              {about.paragraphs.map((paragraph, i) => (
+              {t.about.paragraphs.map((paragraph, i) => (
                 <p
                   key={paragraph.slice(0, 24)}
                   className={`measure text-[1.125rem] leading-[1.75] ${
@@ -54,7 +59,7 @@ export function About() {
 
           <Reveal delay={0.1}>
             <ul className="folio mt-12 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-5 text-muted">
-              {about.focus.map((item) => (
+              {t.about.focus.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>

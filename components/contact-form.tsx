@@ -6,6 +6,7 @@ import {
   CircleNotch,
   WarningCircle,
 } from "@phosphor-icons/react/dist/ssr";
+import { useLang } from "@/components/lang-provider";
 
 type Errors = Partial<Record<"nama" | "email" | "pesan", string>>;
 type Status = "idle" | "submitting" | "success" | "error";
@@ -13,20 +14,21 @@ type Status = "idle" | "submitting" | "success" | "error";
 /** `.field` is the underlined print input defined in globals.css. */
 const LABEL = "folio-caps text-faint";
 
-function validate(values: Record<string, string>): Errors {
-  const errors: Errors = {};
-  if (values.nama.trim().length < 2) errors.nama = "Mohon isi nama lengkap Anda.";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email.trim()))
-    errors.email = "Format alamat email belum valid.";
-  if (values.pesan.trim().length < 10)
-    errors.pesan = "Mohon tulis pesan minimal 10 karakter.";
-  return errors;
-}
-
 export function ContactForm() {
+  const { t } = useLang();
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Errors>({});
   const [failure, setFailure] = useState("");
+
+  function validate(values: Record<string, string>): Errors {
+    const found: Errors = {};
+    if (values.nama.trim().length < 2) found.nama = t.form.errors.name;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email.trim()))
+      found.email = t.form.errors.email;
+    if (values.pesan.trim().length < 10)
+      found.pesan = t.form.errors.message;
+    return found;
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -54,9 +56,7 @@ export function ContactForm() {
       setStatus("success");
     } catch {
       setStatus("error");
-      setFailure(
-        "Pesan gagal terkirim. Silakan coba lagi, atau hubungi saya lewat email.",
-      );
+      setFailure(t.form.failure);
     }
   }
 
@@ -67,16 +67,16 @@ export function ContactForm() {
         className="flex flex-col items-start border border-border-strong p-8"
       >
         <CheckCircle size={24} weight="regular" aria-hidden className="text-accent" />
-        <p className="display-sm mt-5 text-[1.5rem]">Pesan terkirim</p>
+        <p className="display-sm mt-5 text-[1.5rem]">{t.form.successTitle}</p>
         <p className="measure-tight mt-3 text-[1.0625rem] leading-[1.7]">
-          Terima kasih. Saya biasanya membalas dalam satu hingga dua hari kerja.
+          {t.form.successBody}
         </p>
         <button
           type="button"
           onClick={() => setStatus("idle")}
           className="folio-caps mt-7 border border-border-strong px-4 py-2.5 transition-colors duration-200 hover:border-accent hover:text-accent"
         >
-          Tulis pesan lain
+          {t.form.writeAnother}
         </button>
       </div>
     );
@@ -86,14 +86,14 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-9">
       <div className="flex flex-col gap-1.5">
         <label htmlFor="nama" className={LABEL}>
-          Nama
+          {t.form.name}
         </label>
         <input
           id="nama"
           name="nama"
           type="text"
           autoComplete="name"
-          placeholder="Nama lengkap"
+          placeholder={t.form.namePlaceholder}
           aria-invalid={Boolean(errors.nama)}
           aria-describedby={errors.nama ? "nama-error" : undefined}
           className="field"
@@ -107,14 +107,14 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="email" className={LABEL}>
-          Email
+          {t.form.email}
         </label>
         <input
           id="email"
           name="email"
           type="email"
           autoComplete="email"
-          placeholder="nama@perusahaan.com"
+          placeholder={t.form.emailPlaceholder}
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? "email-error" : "email-help"}
           className="field"
@@ -125,20 +125,20 @@ export function ContactForm() {
           </p>
         ) : (
           <p id="email-help" className="mt-1 text-[0.9375rem] text-muted">
-            Balasan akan dikirim ke alamat ini.
+            {t.form.emailHelp}
           </p>
         )}
       </div>
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="pesan" className={LABEL}>
-          Pesan
+          {t.form.message}
         </label>
         <textarea
           id="pesan"
           name="pesan"
           rows={4}
-          placeholder="Ceritakan peran atau proyek yang Anda tawarkan, dan perkiraan waktu mulainya."
+          placeholder={t.form.messagePlaceholder}
           aria-invalid={Boolean(errors.pesan)}
           aria-describedby={errors.pesan ? "pesan-error" : undefined}
           className="field resize-y"
@@ -168,7 +168,7 @@ export function ContactForm() {
         {status === "submitting" && (
           <CircleNotch size={13} weight="bold" aria-hidden className="animate-spin" />
         )}
-        {status === "submitting" ? "Mengirim" : "Kirim pesan"}
+        {status === "submitting" ? t.form.sending : t.form.submit}
       </button>
     </form>
   );

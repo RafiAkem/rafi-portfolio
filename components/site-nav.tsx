@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { List, X } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { nav, profile } from "@/lib/content";
+import { profile } from "@/lib/content";
+import { useLang } from "@/components/lang-provider";
 import { ThemeToggle } from "./theme-toggle";
 
 /**
@@ -11,6 +12,7 @@ import { ThemeToggle } from "./theme-toggle";
  * spread in a thin ruled band, so this stays 60px and never becomes a bar.
  */
 export function SiteNav() {
+  const { lang, setLang, t } = useLang();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const reduce = useReducedMotion();
@@ -19,7 +21,7 @@ export function SiteNav() {
   // so a section is current while it fills the upper half of the viewport.
   // No scroll listener; works under reduced motion.
   useEffect(() => {
-    const sections = nav
+    const sections = t.nav
       .map((item) => document.getElementById(item.href.slice(1)))
       .filter((el): el is HTMLElement => el !== null);
 
@@ -33,7 +35,13 @@ export function SiteNav() {
     );
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+    // t.nav entries are stable per language; re-wire only when hrefs change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
+
+  function cycleLang() {
+    setLang(lang === "en" ? "id" : "en");
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-sm">
@@ -42,8 +50,8 @@ export function SiteNav() {
           {profile.name}
         </a>
 
-        <nav aria-label="Utama" className="hidden items-center gap-8 lg:flex">
-          {nav.map((item) => (
+        <nav aria-label={t.navAria} className="hidden items-center gap-8 lg:flex">
+          {t.nav.map((item) => (
             <a
               key={item.href}
               href={item.href}
@@ -57,19 +65,27 @@ export function SiteNav() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={cycleLang}
+            aria-label={lang === "en" ? "Switch to Indonesian" : "Ganti ke bahasa Inggris"}
+            className="folio-caps grid h-8 min-w-8 place-items-center border border-border-strong px-2 text-muted transition-colors duration-200 hover:border-accent hover:text-accent"
+          >
+            {lang === "en" ? "ID" : "EN"}
+          </button>
           <ThemeToggle />
           <a
             href="#kontak"
             className="folio-caps hidden border border-border-strong px-4 py-2 whitespace-nowrap transition-colors duration-200 hover:border-accent hover:text-accent sm:inline-flex"
           >
-            Hubungi saya
+            {t.contactMe}
           </a>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="menu-seluler"
-            aria-label={open ? "Tutup menu" : "Buka menu"}
+            aria-label={open ? t.closeMenu : t.openMenu}
             className="grid size-8 place-items-center border border-border-strong text-muted transition-colors duration-200 hover:text-accent lg:hidden"
           >
             {open ? (
@@ -93,10 +109,10 @@ export function SiteNav() {
             className="overflow-hidden border-t border-border lg:hidden"
           >
             <nav
-              aria-label="Menu seluler"
+              aria-label={t.mobileNavAria}
               className="mx-auto flex max-w-[1360px] flex-col px-5 sm:px-10"
             >
-              {nav.map((item) => (
+              {t.nav.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
@@ -113,7 +129,7 @@ export function SiteNav() {
                 onClick={() => setOpen(false)}
                 className="folio-caps my-4 bg-accent px-4 py-3 text-center text-on-accent sm:hidden"
               >
-                Hubungi saya
+                {t.contactMe}
               </a>
             </nav>
           </motion.div>

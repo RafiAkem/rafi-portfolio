@@ -1,4 +1,7 @@
+"use client";
+
 import { stack } from "@/lib/content";
+import { useLang } from "@/components/lang-provider";
 import { Reveal } from "@/components/reveal";
 
 /**
@@ -7,9 +10,11 @@ import { Reveal } from "@/components/reveal";
  * To go offline, vendor the SVGs into /public/logos and swap the mask URL.
  */
 export function StackStrip() {
+  const { t } = useLang();
+
   return (
     <section
-      aria-label="Teknologi yang sehari-hari saya pakai"
+      aria-label={t.stackAria}
       className="border-y border-border"
     >
       <Reveal className="mx-auto max-w-[1360px] px-5 py-9 sm:px-10 sm:py-10">

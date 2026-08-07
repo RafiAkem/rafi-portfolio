@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Newsreader } from "next/font/google";
-import { education, profile } from "@/lib/content";
+import { en, profile } from "@/lib/content";
+import { LangProvider } from "@/components/lang-provider";
+import { SkipLink } from "@/components/skip-link";
 import "./globals.css";
 
 /**
@@ -30,14 +32,14 @@ const geistMono = Geist_Mono({
 // URL absolut untuk kartu Open Graph dan JSON-LD. Root domain, bukan sub.
 const SITE_URL = "https://rafiakem.tech";
 
-// Kept under about 60 characters so search results do not truncate it, and
-// front-loaded with the name because that is the query most people arrive on.
-const TITLE = `${profile.name} - ${profile.role}`;
+// Metadata is served once at build time and defaults to English; the on-page
+// copy switches live through LangProvider.
+const TITLE = `${profile.name} - ${en.role}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: TITLE, template: `%s - ${profile.name}` },
-  description: profile.metaDescription,
+  description: en.metaDescription,
   applicationName: profile.name,
   authors: [{ name: profile.name, url: profile.github }],
   creator: profile.name,
@@ -51,29 +53,29 @@ export const metadata: Metadata = {
     "Laravel developer",
     "TypeScript",
     "AI developer Indonesia",
-    "sistem berbasis AI",
-    "aplikasi web",
-    "produk pembelajaran berbasis AI",
-    "Teknik Informatika Universitas Pasundan",
-    "portofolio web developer",
+    "AI-powered systems",
+    "web apps",
+    "AI learning products",
+    "Informatics Universitas Pasundan",
+    "web developer portfolio",
   ],
   category: "technology",
   alternates: { canonical: "/" },
   openGraph: {
     title: TITLE,
-    description: profile.metaDescription,
+    description: en.metaDescription,
     url: SITE_URL,
     siteName: profile.name,
     type: "profile",
     firstName: "Rafi Ikhsanul",
     lastName: "Hakim",
     username: profile.handle,
-    locale: "id_ID",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
-    description: profile.metaDescription,
+    description: en.metaDescription,
     creator: `@${profile.handle}`,
   },
   robots: {
@@ -96,8 +98,8 @@ const personSchema = {
   "@type": "Person",
   name: profile.name,
   alternateName: profile.handle,
-  jobTitle: profile.role,
-  description: profile.metaDescription,
+  jobTitle: en.role,
+  description: en.metaDescription,
   email: `mailto:${profile.email}`,
   url: SITE_URL,
   image: `${SITE_URL}${profile.portraitPath}`,
@@ -108,7 +110,7 @@ const personSchema = {
     addressRegion: "Jawa Barat",
     addressCountry: "ID",
   },
-  alumniOf: { "@type": "CollegeOrUniversity", name: education.school },
+  alumniOf: { "@type": "CollegeOrUniversity", name: "Universitas Pasundan" },
   knowsAbout: [
     "Next.js",
     "React",
@@ -119,7 +121,7 @@ const personSchema = {
     "Retrieval Augmented Generation",
     "Frontend Development",
   ],
-  knowsLanguage: ["id", "en"],
+  knowsLanguage: ["en", "id"],
 };
 
 /**
@@ -132,7 +134,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
         <script
@@ -141,13 +143,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${newsreader.variable} ${geistMono.variable}`}>
-        <a
-          href="#konten"
-          className="folio-caps sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-accent focus:px-4 focus:py-2 focus:text-on-accent"
-        >
-          Lompat ke konten
-        </a>
-        {children}
+        <LangProvider>
+          <SkipLink />
+          {children}
+        </LangProvider>
         {/*
           Chatbot MangRAG "Asisten Rafi Akem" — menjawab pertanyaan pengunjung
           dari knowledge base portofolio (profil, proyek, skill, CV).

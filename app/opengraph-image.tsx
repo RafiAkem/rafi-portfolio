@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
-import { profile } from "@/lib/content";
+import { en, profile } from "@/lib/content";
 
-export const alt = `${profile.name} - ${profile.role}`;
+export const alt = `${profile.name} - ${en.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -40,14 +40,14 @@ export default function OpenGraphImage() {
           }}
         >
           <span>{profile.name}</span>
-          <span>{profile.city}</span>
+          <span>{en.city}</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 78, lineHeight: 1.1 }}>Membangun aplikasi web</div>
+          <div style={{ fontSize: 78, lineHeight: 1.1 }}>Building web apps</div>
           <div style={{ display: "flex", fontSize: 78, lineHeight: 1.1 }}>
-            <span>dan sistem&nbsp;</span>
-            <span style={{ fontStyle: "italic", color: "#1d4e3f" }}>berbasis AI.</span>
+            <span>and&nbsp;</span>
+            <span style={{ fontStyle: "italic", color: "#1d4e3f" }}>AI-powered systems.</span>
           </div>
         </div>
 
@@ -64,7 +64,7 @@ export default function OpenGraphImage() {
             fontFamily: "monospace",
           }}
         >
-          <span>{profile.role}</span>
+          <span>{en.role}</span>
           <span>MangMicro · MangQuiz · Akem&apos;s Ramblings</span>
         </div>
       </div>

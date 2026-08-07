@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "@phosphor-icons/react/dist/ssr";
+import { useLang } from "@/components/lang-provider";
 
 /**
  * Flips the .dark class on <html> and remembers the choice. The pre-paint
@@ -9,6 +10,7 @@ import { Moon, Sun } from "@phosphor-icons/react/dist/ssr";
  * first render never flashes the wrong theme.
  */
 export function ThemeToggle() {
+  const { lang, t } = useLang();
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      aria-label="Ganti tema terang atau gelap"
+      aria-label={lang === "en" ? "Toggle light or dark theme" : "Ganti tema terang atau gelap"}
       aria-pressed={isDark}
       className="grid size-8 place-items-center border border-border-strong text-muted transition-colors duration-200 hover:border-accent hover:text-accent"
     >

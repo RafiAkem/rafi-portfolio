@@ -1,5 +1,8 @@
+"use client";
+
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
-import { projects, projectsIntro, type Project } from "@/lib/content";
+import { type Project } from "@/lib/content";
+import { useLang } from "@/components/lang-provider";
 import { Reveal } from "@/components/reveal";
 import { ParallaxImage } from "@/components/parallax-image";
 
@@ -44,12 +47,16 @@ function Entry({
   ratio,
   sizes,
   lead,
+  viewSite,
+  openSite,
 }: {
   project: Project;
   plate: string;
   ratio: string;
   sizes: string;
   lead: boolean;
+  viewSite: string;
+  openSite: string;
 }) {
   return (
     <article className="group relative">
@@ -97,7 +104,7 @@ function Entry({
               ))}
             </ul>
             <span className="folio-caps ml-auto inline-flex items-center gap-1.5 transition-colors duration-300 group-hover:text-accent">
-              Lihat situs
+              {viewSite}
               <ArrowUpRight
                 size={11}
                 weight="bold"
@@ -116,7 +123,7 @@ function Entry({
         href={project.live}
         target="_blank"
         rel="noreferrer"
-        aria-label={`Buka situs ${project.title}`}
+        aria-label={`${openSite} ${project.title}`}
         className="absolute inset-0 z-10 rounded-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       />
     </article>
@@ -124,27 +131,31 @@ function Entry({
 }
 
 export function Projects() {
+  const { t } = useLang();
+
   return (
     <section id="proyek" className="mx-auto max-w-[1360px] px-5 py-24 sm:px-10 lg:py-36">
       <Reveal>
         <h2 className="display border-b border-border pb-6 text-[clamp(1.625rem,3.4vw,2.75rem)]">
-          Proyek pilihan
+          {t.projectsHeading}
         </h2>
       </Reveal>
 
       <Reveal delay={0.06}>
-        <p className="measure mt-8 text-[1.125rem] leading-[1.75]">{projectsIntro}</p>
+        <p className="measure mt-8 text-[1.125rem] leading-[1.75]">{t.projectsIntro}</p>
       </Reveal>
 
       <div className="mt-20 grid items-start gap-x-10 gap-y-24 lg:grid-cols-12 lg:gap-y-28">
-        {projects.map((project, i) => (
+        {t.projects.map((project, i) => (
           <Reveal key={project.slug} delay={0.05} className={LAYOUT[i].cell}>
             <Entry
               project={project}
-              plate={`Plat ${String(i + 1).padStart(2, "0")}`}
+              plate={`${t.plate} ${String(i + 1).padStart(2, "0")}`}
               ratio={LAYOUT[i].ratio}
               sizes={LAYOUT[i].sizes}
               lead={LAYOUT[i].lead}
+              viewSite={t.hero.viewSite}
+              openSite={t.hero.openSite}
             />
           </Reveal>
         ))}

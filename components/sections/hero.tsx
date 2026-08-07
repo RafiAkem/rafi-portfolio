@@ -11,7 +11,8 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { profile, projects } from "@/lib/content";
+import { profile } from "@/lib/content";
+import { useLang } from "@/components/lang-provider";
 import { HalftoneField } from "@/components/halftone-field";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -49,11 +50,13 @@ const SLOTS = [
  * prefers-reduced-motion.
  */
 export function Hero() {
+  const { t } = useLang();
   const reduce = useReducedMotion();
   const section = useRef<HTMLElement>(null);
 
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const projects = t.projects;
   const active = projects[index];
 
   useEffect(() => {
@@ -106,7 +109,7 @@ export function Hero() {
             {/* The cap is the largest size at which both lines still hold on
                 one line inside a seven column measure. */}
             <h1 className="display text-[clamp(1.75rem,4.5vw,3.5rem)]">
-              {profile.headlineLines.map((line, i) => {
+              {t.headlineLines.map((line, i) => {
                 const words = line.map((segment, j) => (
                   <span key={j} className={segment.italic ? "italic" : undefined}>
                     {segment.text}
@@ -158,12 +161,12 @@ export function Hero() {
               className="mt-10 grid gap-x-10 gap-y-5 border-t border-border pt-6 sm:grid-cols-[auto_1fr]"
             >
               <p className="folio-caps whitespace-nowrap text-faint">
-                {profile.role}
+                {t.role}
               </p>
               {/* Body copy is ink, not grey. Setting every paragraph in a muted
                   tone is a web habit that reads as unfinished on paper. */}
               <p className="measure-tight text-[1.0625rem] leading-[1.7]">
-                {profile.subheadline}
+                {t.subheadline}
               </p>
             </motion.div>
 
@@ -177,13 +180,13 @@ export function Hero() {
                 href="#proyek"
                 className="folio-caps bg-accent px-6 py-3.5 whitespace-nowrap text-on-accent transition-colors duration-200 hover:bg-accent-hover"
               >
-                Lihat proyek
+                {t.hero.viewProjects}
               </a>
               <a
                 href="#kontak"
                 className="folio-caps inline-flex items-center gap-2 border-b border-border-strong pb-1 whitespace-nowrap transition-colors duration-200 hover:border-accent hover:text-accent"
               >
-                Hubungi saya
+                {t.contactMe}
               </a>
             </motion.div>
           </motion.div>
@@ -258,7 +261,7 @@ export function Hero() {
                           href={project.live}
                           target="_blank"
                           rel="noreferrer"
-                          aria-label={`${project.title}, ${project.kind}. Buka situsnya.`}
+                          aria-label={`${project.title}, ${project.kind}. ${t.hero.openSite}.`}
                           aria-hidden={!isFront}
                           tabIndex={isFront ? 0 : -1}
                           className={`block h-full w-full overflow-hidden rounded-surface border border-border-strong bg-surface-raised transition-transform duration-300 ${
@@ -305,7 +308,7 @@ export function Hero() {
                   <span className="truncate">{active.kind}</span>
                 </motion.span>
                 <span className="ml-auto inline-flex shrink-0 items-center gap-1 whitespace-nowrap">
-                  Lihat situs
+                  {t.hero.viewSite}
                   <ArrowUpRight size={11} weight="bold" />
                 </span>
               </a>

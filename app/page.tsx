@@ -1,3 +1,4 @@
+import { getGithubStats } from "@/lib/github";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { SiteNav } from "@/components/site-nav";
 import { Hero } from "@/components/sections/hero";
@@ -9,7 +10,9 @@ import { CodeLog } from "@/components/sections/code-log";
 import { Contact } from "@/components/sections/contact";
 import { SiteFooter } from "@/components/sections/site-footer";
 
-export default function Page() {
+export default async function Page() {
+  const stats = await getGithubStats();
+
   return (
     <>
       <SmoothScroll />
@@ -20,7 +23,7 @@ export default function Page() {
         <About />
         <Projects />
         <Experience />
-        <CodeLog />
+        <CodeLog stats={stats} />
         <Contact />
       </main>
       <SiteFooter />

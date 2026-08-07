@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { Plate } from "@/lib/contributions";
 import { shortDate, weekday } from "@/lib/contributions";
+import { useLang } from "@/components/lang-provider";
 
 type ContributionPlateProps = {
   plate: Plate;
@@ -35,6 +36,7 @@ export function ContributionPlate({
   rangeStart,
   rangeEnd,
 }: ContributionPlateProps) {
+  const { lang, t } = useLang();
   const [reading, setReading] = useState<string | null>(null);
   const [month, setMonth] = useState<number | null>(null);
 
@@ -61,13 +63,13 @@ export function ContributionPlate({
     setMonth(cell.month);
     // Terse and factual on every day, including the empty ones. "No activity"
     // repeated across 283 cells is a drumbeat, not a label.
-    setReading(`${shortDate(cell.date)} · ${weekday(cell.date)} · ${cell.count} kontribusi`);
+    setReading(`${shortDate(cell.date, lang)} · ${weekday(cell.date, lang)} · ${cell.count} ${t.contribution.contributions}`);
   }
 
   function readMonth(index: number) {
     const band = plate.months[index];
     setMonth(index);
-    setReading(`${band.long} · ${band.total} kontribusi`);
+    setReading(`${band.long} · ${band.total} ${t.contribution.contributions}`);
   }
 
   const bracket = month === null ? null : plate.months[month];
@@ -76,8 +78,8 @@ export function ContributionPlate({
   return (
     <div>
       <p className="folio text-muted">
-        <span className="text-text">{totalContributions} kontribusi</span>
-        {` · ${activeDays} hari aktif · ${shortDate(rangeStart)} hingga ${shortDate(rangeEnd)}`}
+        <span className="text-text">{totalContributions} {t.contribution.contributions}</span>
+        {` · ${activeDays} ${t.contribution.activeDays} · ${shortDate(rangeStart, lang)} ${t.contribution.to} ${shortDate(rangeEnd, lang)}`}
       </p>
 
       {/* The fine plate. Pointer-only by design; the bars below are the
@@ -119,7 +121,7 @@ export function ContributionPlate({
                 onPointerEnter={() => readMonth(i)}
                 onFocus={() => readMonth(i)}
                 onClick={() => readMonth(i)}
-                aria-label={`${band.long}, ${band.total} kontribusi`}
+                aria-label={`${band.long}, ${band.total} ${t.contribution.contributions}`}
                 className="group flex w-full flex-col items-center gap-1.5 pb-1 transition-colors duration-200"
               >
                 <span
@@ -158,7 +160,10 @@ export function ContributionPlate({
           rather than an invitation: an instruction to hover would be a lie on
           every touch screen, where the plate is not even rendered. */}
       <p className="folio mt-5 min-h-[1.5rem] border-t border-border pt-3 tabular-nums text-muted">
-        {reading ?? `Puncak harian ${plate.ceiling} kontribusi · bulan tersibuk ${peak.long}`}
+        {reading ??
+          t.contribution.dailyPeak
+            .replace("{n}", String(plate.ceiling))
+            .replace("{m}", peak.long)}
       </p>
 
       {/* The whole series, for anyone not using a pointer.
@@ -170,12 +175,14 @@ export function ContributionPlate({
       <div className="sr-only">
         <table>
           <caption>
-            Kontribusi GitHub per bulan, {shortDate(rangeStart)} sampai {shortDate(rangeEnd)}
+            {t.contribution.caption
+              .replace("{start}", shortDate(rangeStart, lang))
+              .replace("{end}", shortDate(rangeEnd, lang))}
           </caption>
           <thead>
             <tr>
-              <th scope="col">Bulan</th>
-              <th scope="col">Kontribusi</th>
+              <th scope="col">{t.contribution.month}</th>
+              <th scope="col">{t.contribution.contribution}</th>
             </tr>
           </thead>
           <tbody>

@@ -4,7 +4,7 @@ type Payload = { nama?: string; email?: string; pesan?: string };
 
 const CONTACT_TO = process.env.CONTACT_TO ?? "yc66zio@gmail.com";
 const CONTACT_FROM =
-  process.env.CONTACT_FROM ?? "kontak@rafiakem.tech";
+  process.env.CONTACT_FROM ?? "contact@rafiakem.tech";
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 /**

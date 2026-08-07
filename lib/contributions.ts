@@ -1,4 +1,5 @@
 import type { ContributionDay, Language } from "./github";
+import type { Lang } from "./content";
 
 /**
  * Pure shaping of the raw GitHub payload into what the section draws.
@@ -9,14 +10,26 @@ import type { ContributionDay, Language } from "./github";
  * mismatch. The tables below are the whole of the localisation.
  */
 
-const MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+const MONTHS_SHORT: Record<Lang, string[]> = {
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  id: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+};
 
-const MONTHS_LONG = [
-  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
-];
+const MONTHS_LONG: Record<Lang, string[]> = {
+  en: [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ],
+  id: [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+  ],
+};
 
-const WEEKDAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+const WEEKDAYS: Record<Lang, string[]> = {
+  en: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  id: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
+};
 
 /** Parsed as UTC. The API hands back plain calendar dates with no zone, and
  *  letting the local zone shift them moves days across week boundaries. */
@@ -26,20 +39,20 @@ function parts(iso: string) {
 }
 
 /** "14 Jan 2026" */
-export function shortDate(iso: string): string {
+export function shortDate(iso: string, lang: Lang = "id"): string {
   const { y, m, d } = parts(iso);
-  return `${d} ${MONTHS_SHORT[m]} ${y}`;
+  return `${d} ${MONTHS_SHORT[lang][m]} ${y}`;
 }
 
-/** "Rabu" */
-export function weekday(iso: string): string {
-  return WEEKDAYS[parts(iso).weekday];
+/** "Rabu" / "Wednesday" */
+export function weekday(iso: string, lang: Lang = "id"): string {
+  return WEEKDAYS[lang][parts(iso).weekday];
 }
 
 /** "26 Juli 2026", from an ISO timestamp. */
-export function longDate(isoTimestamp: string): string {
+export function longDate(isoTimestamp: string, lang: Lang = "id"): string {
   const at = new Date(isoTimestamp);
-  return `${at.getUTCDate()} ${MONTHS_LONG[at.getUTCMonth()]} ${at.getUTCFullYear()}`;
+  return `${at.getUTCDate()} ${MONTHS_LONG[lang][at.getUTCMonth()]} ${at.getUTCFullYear()}`;
 }
 
 /** Indonesian decimal comma, fixed to one place: 49.6 -> "49,6". */
@@ -110,7 +123,7 @@ export type Plate = {
  * Lays the flat day list out as printer's columns: one column per week, seven
  * rows, Sunday at the top, exactly as the source calendar is drawn.
  */
-export function buildPlate(days: ContributionDay[]): Plate {
+export function buildPlate(days: ContributionDay[], lang: Lang = "id"): Plate {
   const offset = parts(days[0].date).weekday;
 
   const months: MonthBand[] = [];
@@ -121,7 +134,7 @@ export function buildPlate(days: ContributionDay[]): Plate {
 
     let band = months[months.length - 1];
     if (!band || band.key !== key) {
-      band = { key, short: MONTHS_SHORT[m], long: `${MONTHS_LONG[m]} ${y}`, total: 0, column, span: 0 };
+      band = { key, short: MONTHS_SHORT[lang][m], long: `${MONTHS_LONG[lang][m]} ${y}`, total: 0, column, span: 0 };
       months.push(band);
     }
     band.total += day.count;

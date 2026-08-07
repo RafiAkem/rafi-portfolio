@@ -1,9 +1,10 @@
+"use client";
+
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { profile } from "@/lib/content";
-import { getGithubStats } from "@/lib/github";
-import {
-  buildPlate,
-} from "@/lib/contributions";
+import type { GithubStats } from "@/lib/github";
+import { useLang } from "@/components/lang-provider";
+import { buildPlate } from "@/lib/contributions";
 import { Reveal } from "@/components/reveal";
 import { ContributionPlate } from "@/components/contribution-plate";
 
@@ -25,9 +26,9 @@ import { ContributionPlate } from "@/components/contribution-plate";
  * The section is not in the nav. A nav entry would give a contribution graph
  * the same billing as the products, which is not the claim being made.
  */
-export async function CodeLog() {
-  const stats = await getGithubStats();
-  const plate = buildPlate(stats.days);
+export function CodeLog({ stats }: { stats: GithubStats }) {
+  const { lang, t } = useLang();
+  const plate = buildPlate(stats.days, lang);
 
   return (
     <section
@@ -39,7 +40,7 @@ export async function CodeLog() {
           <div>
             <p className="folio-caps text-faint">GitHub · {profile.handle}</p>
             <h2 className="display mt-3 text-[clamp(1.625rem,3.4vw,2.75rem)]">
-              Catatan kode
+              {t.codeLog.heading}
             </h2>
           </div>
           <a
@@ -48,7 +49,7 @@ export async function CodeLog() {
             rel="noreferrer"
             className="folio-caps inline-flex items-center gap-2 border border-border-strong px-4 py-2.5 whitespace-nowrap transition-colors duration-200 hover:border-accent hover:text-accent"
           >
-            Profil GitHub
+            {t.codeLog.githubProfile}
             <ArrowUpRight size={12} weight="bold" aria-hidden />
           </a>
         </div>
@@ -58,16 +59,13 @@ export async function CodeLog() {
         {/* The entire honesty burden of the section sits in this paragraph:
             scope stated once, factually, then the page moves on. */}
         <p className="measure mt-10 text-[1.0625rem] leading-[1.7] text-muted lg:mt-12">
-          Angka di bawah dibaca langsung dari GitHub dan hanya mencakup repositori
-          publik. Sebagian besar pekerjaan klien dan produk yang sedang berjalan
-          tersimpan di repositori privat, jadi yang tergambar di sini adalah ritme
-          kerja, bukan seluruh keluaran.
+          {t.codeLog.scope}
         </p>
       </Reveal>
 
       <Reveal delay={0.06}>
         <div className="mt-16 border-t border-border pt-8 lg:mt-20">
-          <h3 className="display-sm text-[1.25rem]">Aktivitas 12 bulan</h3>
+          <h3 className="display-sm text-[1.25rem]">{t.codeLog.activityHeading}</h3>
 
           <div className="mt-6">
             <ContributionPlate
