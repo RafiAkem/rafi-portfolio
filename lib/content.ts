@@ -51,7 +51,7 @@ export const profile = {
    */
   metaDescription:
     "Fullstack web developer di Bandung. Membangun aplikasi web dan sistem berbasis AI dengan Next.js, TypeScript, dan Laravel. Eks-intern di PT Telkom Indonesia.",
-  email: "yc66zio@gmail.com",
+  email: "kontak@rafiakem.tech",
   city: "Bandung, Jawa Barat",
   blog: "https://akemramblings.dev",
   github: "https://github.com/RafiAkem",
