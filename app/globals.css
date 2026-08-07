@@ -191,11 +191,11 @@
   html.theme-anim *::before,
   html.theme-anim *::after {
     transition-property: color, background-color, border-color, fill, stroke;
-    /* 450ms: long enough to read as a deliberate palette shift, and the
-       ease-in-out keeps the fade gentle at both ends instead of snapping
-       in. Faster durations feel like a blink next to a full page repaint. */
-    transition-duration: 450ms;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    /* 600ms: reads as a deliberate palette shift without feeling heavy,
+       and the ease-out lands gently instead of stopping dead. When the
+       whole page repaints, shorter fades read as a blink. */
+    transition-duration: 600ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* ------------------------------------------------------------------
