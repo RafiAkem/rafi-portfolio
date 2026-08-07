@@ -1,52 +1,47 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { flushSync } from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import { Moon, Sun } from "@phosphor-icons/react/dist/ssr";
 import { useLang } from "@/components/lang-provider";
 
 /**
  * Flips the .dark class on <html> and remembers the choice.
  *
- * The switch runs through the View Transitions API when the browser has it:
- * the old theme is snapshotted, the class flips, and the browser crossfades
- * the two frames (0.3s, keyed in globals.css). Older browsers, and users
- * under prefers-reduced-motion, get an instant flip.
+ * For the 250ms of the flip, <html> carries "theme-anim" (keyed in
+ * globals.css), which makes every background, text and border color ease
+ * between palettes instead of snapping. The class is then removed so the
+ * transition cost is paid only while the switch is happening.
  */
 export function ThemeToggle() {
   const { lang } = useLang();
   const [isDark, setIsDark] = useState(false);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains("dark"));
+    return () => {
+      if (timerRef.current) window.clearTimeout(timerRef.current);
+    };
   }, []);
 
   function apply(next: boolean) {
-    // flushSync pins the class flip and the icon swap inside the view
-    // transition snapshot; without it the new frame can be captured
-    // before React has re-rendered.
-    flushSync(() => {
-      document.documentElement.classList.toggle("dark", next);
-      try {
-        localStorage.setItem("theme", next ? "dark" : "light");
-      } catch {
-        // Private mode. The class still flips for this session.
-      }
-      setIsDark(next);
-    });
+    const root = document.documentElement;
+    root.classList.add("theme-anim");
+    root.classList.toggle("dark", next);
+    try {
+      localStorage.setItem("theme", next ? "dark" : "light");
+    } catch {
+      // Private mode. The class still flips for this session.
+    }
+    setIsDark(next);
+    // Keep the easing class alive for one transition, then drop it. The
+    // timeout also protects a rapid double-click mid-transition.
+    if (timerRef.current) window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => root.classList.remove("theme-anim"), 300);
   }
 
   function toggle() {
-    const next = !document.documentElement.classList.contains("dark");
-    const doc = document as Document & {
-      startViewTransition?: (cb: () => void) => void;
-    };
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (doc.startViewTransition && !reduce) {
-      doc.startViewTransition(() => apply(next));
-    } else {
-      apply(next);
-    }
+    apply(!document.documentElement.classList.contains("dark"));
   }
 
   return (
