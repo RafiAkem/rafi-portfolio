@@ -34,10 +34,10 @@ export function ThemeToggle() {
       // Private mode. The class still flips for this session.
     }
     setIsDark(next);
-    // Keep the easing class alive for one transition, then drop it. The
-    // timeout also protects a rapid double-click mid-transition.
+    // Keep the easing class alive for one transition (slightly longer than
+    // the 450ms CSS duration so a rapid double-click cannot cut it short).
     if (timerRef.current) window.clearTimeout(timerRef.current);
-    timerRef.current = window.setTimeout(() => root.classList.remove("theme-anim"), 300);
+    timerRef.current = window.setTimeout(() => root.classList.remove("theme-anim"), 500);
   }
 
   function toggle() {
