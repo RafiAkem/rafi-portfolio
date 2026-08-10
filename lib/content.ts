@@ -200,10 +200,10 @@ export const en = {
         year: "2026",
         items: [
           {
-            role: "Frontend Developer",
+            role: "Frontend & DevOps Developer",
             org: "Ciptaware",
             detail:
-              "Built an agency landing page focused on animation quality and smooth scrolling.",
+              "Built the agency landing page and shipped it to production: frontend work focused on animation quality and smooth scrolling, plus the devops side — CI/CD pipeline and deployment.",
           },
         ],
       },
@@ -217,12 +217,6 @@ export const en = {
             detail:
               "Contributed to TGCast, Telkom's internal employee system. Built backend services with Laravel 12 without a separate API layer, plus Inertia.js interfaces with React 19 and Radix UI. Automated routine processes with Laravel Jobs & Scheduler, and shipped releases through a GitLab CI/CD pipeline to OpenShift.",
           },
-          {
-            role: "Freelance Web Developer",
-            org: "Client projects",
-            detail:
-              "Built public sites with Next.js and operation panels with Laravel, both designed to be usable without technical knowledge.",
-          },
         ],
       },
       {
@@ -230,10 +224,10 @@ export const en = {
         items: [
           {
             role: "Freelance Web Developer",
-            org: "EasyIzin",
-            period: "Oct - Nov 2024",
+            org: "Client projects",
+            period: "2024 - Present",
             detail:
-              "Designed and built a company website with Next.js and Tailwind CSS, covering a consultation page, company profile, and a simple booking system. Worked directly with the company founder.",
+              "Public websites with Next.js and operation panels with Laravel for EasyIzin and other startups and small businesses. Built to be usable without technical knowledge, from scoping with founders to deployment.",
           },
         ],
       },
@@ -412,10 +406,10 @@ export const id: typeof en = {
         year: "2026",
         items: [
           {
-            role: "Frontend Developer",
+            role: "Frontend & DevOps Developer",
             org: "Ciptaware",
             detail:
-              "Mengerjakan landing page agensi dengan fokus pada kualitas animasi dan smooth scroll.",
+              "Membangun landing page agensi dengan fokus kualitas animasi dan smooth scroll, sekaligus menangani sisi devops: pipeline CI/CD dan deployment ke produksi.",
           },
         ],
       },
@@ -429,12 +423,6 @@ export const id: typeof en = {
             detail:
               "Berkontribusi pada pengembangan TGCast, sistem internal karyawan Telkom. Membangun layanan backend dengan Laravel 12 tanpa layer API terpisah, serta antarmuka Inertia.js dengan React 19 dan Radix UI. Proses rutin diotomatiskan lewat Laravel Job & Scheduler, dan rilis dijalankan melalui pipeline GitLab CI/CD ke OpenShift.",
           },
-          {
-            role: "Freelance Web Developer",
-            org: "Proyek klien",
-            detail:
-              "Membangun situs publik dengan Next.js dan panel operasional dengan Laravel. Keduanya dirancang agar dapat digunakan tanpa pengetahuan teknis.",
-          },
         ],
       },
       {
@@ -442,10 +430,10 @@ export const id: typeof en = {
         items: [
           {
             role: "Freelance Web Developer",
-            org: "EasyIzin",
-            period: "Okt - Nov 2024",
+            org: "Proyek klien",
+            period: "2024 - Sekarang",
             detail:
-              "Merancang dan membangun website perusahaan dengan Next.js dan Tailwind CSS, mencakup halaman konsultasi, profil perusahaan, dan sistem booking sederhana. Dikerjakan langsung bersama pendiri perusahaan.",
+              "Situs publik dengan Next.js dan panel operasional dengan Laravel untuk EasyIzin serta startup dan usaha kecil lainnya. Semua dirancang agar dapat digunakan tanpa pengetahuan teknis, dari diskusi lingkup bersama pendiri hingga deployment.",
           },
         ],
       },

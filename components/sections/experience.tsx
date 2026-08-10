@@ -42,7 +42,9 @@ export function Experience() {
                     </h3>
                     <p className="folio mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
                       <span className="text-accent">{item.org}</span>
-                      {item.period && <span className="text-faint">{item.period}</span>}
+                      {"period" in item && item.period && (
+                        <span className="text-faint">{item.period}</span>
+                      )}
                     </p>
                     <p className="measure mt-4 text-[1.0625rem] leading-[1.7]">
                       {item.detail}
