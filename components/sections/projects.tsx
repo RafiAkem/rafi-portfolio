@@ -103,6 +103,11 @@ function Entry({
                 <li key={tag}>{tag}</li>
               ))}
             </ul>
+            {project.copyright && (
+              <span className="folio-caps inline-flex items-center rounded-full border border-accent/30 bg-accent/5 px-3 py-1 text-accent">
+                {project.copyright}
+              </span>
+            )}
             <span className="folio-caps ml-auto inline-flex items-center gap-1.5 transition-colors duration-300 group-hover:text-accent">
               {viewSite}
               <ArrowUpRight

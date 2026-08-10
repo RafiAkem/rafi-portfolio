@@ -70,6 +70,8 @@ export type Project = {
   kind: string;
   summary: string;
   tags: readonly string[];
+  /** Optional legal registration shown as a badge on the card. */
+  copyright?: string;
   year: string;
   /** Screenshot of the running product, captured from the live site. */
   image: StaticImageData;
@@ -150,6 +152,7 @@ export const en = {
       summary:
         "Turns one lecture document into six study formats: summary, quiz, slides, mind map, audio, and narrated video. Designed to lower students' cognitive load, not add another app.",
       tags: ["Next.js", "AI pipeline", "PostgreSQL"],
+      copyright: "Registered copyright · No. 001404869 (DJKI)",
       year: "2026",
       image: mangmicroShot,
       imageAlt: "MangMicro landing page with title and product preview",
@@ -356,6 +359,7 @@ export const id: typeof en = {
       summary:
         "Mengubah satu dokumen kuliah menjadi enam format belajar: ringkasan, kuis, slide, mind map, audio, dan video bernarasi. Dirancang untuk menurunkan beban kognitif mahasiswa, bukan menambah satu aplikasi lagi.",
       tags: ["Next.js", "AI pipeline", "PostgreSQL"],
+      copyright: "Hak Cipta Terdaftar · No. 001404869 (DJKI)",
       year: "2026",
       image: mangmicroShot,
       imageAlt: "Halaman depan MangMicro dengan judul dan pratinjau produk",
