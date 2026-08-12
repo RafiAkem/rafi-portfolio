@@ -147,16 +147,6 @@ export default function RootLayout({
           <SkipLink />
           {children}
         </LangProvider>
-        {/*
-          Chatbot MangRAG "Asisten Rafi Akem" — menjawab pertanyaan pengunjung
-          dari knowledge base portofolio (profil, proyek, skill, CV).
-        */}
-        <script
-          src="https://mangrag.vercel.app/widget.js"
-          data-bot="8e03c797-6d12-4dc1-b41d-f2dec4c3f27a"
-          data-key="bot-d77c803b-6a1d-43ff-8790-a1b397d4289f"
-          async
-        />
       </body>
     </html>
   );
