@@ -309,6 +309,11 @@
   .plate {
     display: grid;
     grid-auto-flow: column;
+    /* Pin the auto tracks to the cell size. Without this the block-level
+       grid stretches its auto tracks to fill the container width (~21.3px
+       instead of 17px here), which shifts every column right of the month
+       bracket's calc((cell + gap) * n) position by ~4.3px per column. */
+    grid-auto-columns: var(--cell);
     grid-template-rows: repeat(7, var(--cell));
     gap: var(--gap);
   }
