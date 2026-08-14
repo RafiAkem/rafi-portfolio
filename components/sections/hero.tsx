@@ -21,15 +21,14 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 const CYCLE_MS = 4800;
 
 /**
- * Resting transform per depth slot, front first. The plates hinge on their
- * left edge, so moving between slots reads as a page turning rather than a
- * card sliding.
+ * Resting transform per depth slot, front first. Slots are generated inside
+ * the component to match the project count so every plate owns a unique
+ * position (a clamped hardcoded list meant two cards shared one slot and
+ * overlapped). Pure 2D fan on purpose: a 3D rotateY brings the back plates
+ * closer to the viewer than the front plate, depth-sorting overrides
+ * z-index, and the back plate bleeds over the front one.
  */
-const SLOTS = [
-  { x: 0, y: 0, rotate: 0, rotateY: 0 },
-  { x: 16, y: -13, rotate: 1.2, rotateY: -7 },
-  { x: 32, y: -26, rotate: 2.4, rotateY: -13 },
-] as const;
+const SLOT_STEP = { x: 16, y: -13, rotate: 1.2 } as const;
 
 /**
  * Editorial hero. The type states the claim, the plates prove it with the
@@ -58,6 +57,12 @@ export function Hero() {
   const [paused, setPaused] = useState(false);
   const projects = t.projects;
   const active = projects[index];
+  const slots = projects.map((_, i) => ({
+    x: i * SLOT_STEP.x,
+    y: i * SLOT_STEP.y,
+    rotate: i * SLOT_STEP.rotate,
+    rotateY: 0,
+  }));
 
   useEffect(() => {
     if (reduce || paused || projects.length < 2) return;
@@ -200,7 +205,7 @@ export function Hero() {
             <motion.div style={reduce ? undefined : { y: plateY }}>
               {/* Reserve the room the stacked plates offset into. */}
               <div
-                className="mx-auto w-full max-w-[540px] pt-9 pr-9 lg:max-w-none"
+                className="mx-auto w-full max-w-[540px] pt-12 pr-12 lg:max-w-none"
                 style={{ perspective: 1600 }}
                 onPointerMove={handlePointerMove}
                 onPointerLeave={() => {
@@ -219,14 +224,13 @@ export function Hero() {
                       : {
                           rotateX: tiltX,
                           rotateY: tiltY,
-                          transformStyle: "preserve-3d",
                         }
                   }
                   className="relative aspect-[16/10] w-full"
                 >
                   {projects.map((project, i) => {
                     const slot = (i - index + projects.length) % projects.length;
-                    const rest = SLOTS[Math.min(slot, SLOTS.length - 1)];
+                    const rest = slots[slot];
                     const isFront = slot === 0;
 
                     return (
