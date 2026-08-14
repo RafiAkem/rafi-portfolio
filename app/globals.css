@@ -304,16 +304,18 @@
        leaves a little over that for the scrollbar. */
     --cell: clamp(7px, calc((100vw - 5rem) / 63), 17px);
     --gap: max(1px, calc(var(--cell) * 0.17));
+    /* The grid below stretches its auto tracks to fill the container, so the
+       real column pitch is the container width minus 52 gaps, divided by the
+       column count. The month bracket must position with this pitch (--track),
+       not with --cell, or it drifts right of the rendered columns. */
+    --cols: 53;
+    --track: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
   }
 
   .plate {
     display: grid;
     grid-auto-flow: column;
-    /* Pin the auto tracks to the cell size. Without this the block-level
-       grid stretches its auto tracks to fill the container width (~21.3px
-       instead of 17px here), which shifts every column right of the month
-       bracket's calc((cell + gap) * n) position by ~4.3px per column. */
-    grid-auto-columns: var(--cell);
+    grid-auto-columns: minmax(0, 1fr);
     grid-template-rows: repeat(7, var(--cell));
     gap: var(--gap);
   }

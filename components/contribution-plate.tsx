@@ -84,7 +84,11 @@ export function ContributionPlate({
 
       {/* The fine plate. Pointer-only by design; the bars below are the
           keyboard and screen-reader path to the same numbers. */}
-      <div className="plate-sheet mt-7 hidden sm:block" aria-hidden>
+      <div
+        className="plate-sheet mt-7 hidden sm:block"
+        aria-hidden
+        style={{ "--cols": plate.columns } as React.CSSProperties}
+      >
         <div className="plate" onPointerOver={readDay}>
           {cells}
         </div>
@@ -98,8 +102,8 @@ export function ContributionPlate({
             style={{
               height: "5px",
               opacity: bracket ? 1 : 0,
-              left: `calc((var(--cell) + var(--gap)) * ${(bracket?.column ?? 1) - 1})`,
-              width: `calc(var(--cell) * ${bracket?.span ?? 1} + var(--gap) * ${(bracket?.span ?? 1) - 1})`,
+              left: `calc((var(--track) + var(--gap)) * ${(bracket?.column ?? 1) - 1})`,
+              width: `calc(var(--track) * ${bracket?.span ?? 1} + var(--gap) * ${(bracket?.span ?? 1) - 1})`,
             }}
           />
         </div>
