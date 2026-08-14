@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { Plate } from "@/lib/contributions";
-import { shortDate, weekday } from "@/lib/contributions";
+import { plateIndexAt, shortDate, weekday } from "@/lib/contributions";
 import { useLang } from "@/components/lang-provider";
 
 type ContributionPlateProps = {
@@ -57,9 +57,23 @@ export function ContributionPlate({
   );
 
   function readDay(event: React.PointerEvent<HTMLDivElement>) {
-    const i = (event.target as HTMLElement).dataset?.i;
-    if (i === undefined) return;
-    const cell = plate.cells[Number(i)];
+    // Hit-test by position, not by event target: the plate's stretched tracks
+    // are wider than the 17px cells, so the old dataset lookup left a dead
+    // band on the right of every column where hovering did nothing.
+    const el = event.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    const gap = parseFloat(getComputedStyle(el).rowGap) || 1;
+    const i = plateIndexAt(
+      event.clientX - rect.left,
+      event.clientY - rect.top,
+      rect,
+      gap,
+      plate.columns,
+      plate.offset,
+      plate.cells.length,
+    );
+    if (i < 0) return;
+    const cell = plate.cells[i];
     setMonth(cell.month);
     // Terse and factual on every day, including the empty ones. "No activity"
     // repeated across 283 cells is a drumbeat, not a label.
@@ -117,7 +131,7 @@ export function ContributionPlate({
             the readout stay where they were put; clearing them on exit would
             make the section blink back to nothing every time the cursor
             crosses it. */}
-        <ul className="grid grid-cols-[repeat(13,minmax(0,1fr))] gap-x-1">
+        <ul className="grid grid-cols-[repeat(13,minmax(0,1fr))] gap-x-px">
           {plate.months.map((band, i) => (
             <li key={band.key}>
               <button

@@ -60,6 +60,33 @@ export function percent(share: number): string {
   return (share * 100).toFixed(1).replace(".", ",");
 }
 
+/**
+ * Grid hit-testing. Maps a pointer position inside the plate (relative to the
+ * plate's top-left) to a day index, or -1 for leading pads and the void past
+ * the last day.
+ *
+ * The plate stretches its auto columns to fill the container, so the real
+ * column pitch is (width + gap) / columns and the row pitch is
+ * (height + gap) / 7. Testing against these pitches makes every rendered
+ * column live — a 17px cell inside a 21px stretched track must not leave a
+ * dead band on its right edge, which is exactly what the old per-cell
+ * dataset lookup did.
+ */
+export function plateIndexAt(
+  x: number,
+  y: number,
+  rect: { width: number; height: number },
+  gap: number,
+  columns: number,
+  offset: number,
+  length: number,
+): number {
+  const col = Math.floor(x / ((rect.width + gap) / columns));
+  const row = Math.floor(y / ((rect.height + gap) / 7));
+  const i = col * 7 + row - offset;
+  return i >= 0 && i < length ? i : -1;
+}
+
 /** Indonesian thousands separator: 4875001 -> "4.875.001". */
 export function thousands(n: number): string {
   return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
