@@ -141,6 +141,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
         />
+        {/* Cloudflare Web Analytics */}
+        <script
+          type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: "a82ee7ba10044803a930066756494768" })}
+        />
+        {/* End Cloudflare Web Analytics */}
       </head>
       <body className={`${newsreader.variable} ${geistMono.variable}`}>
         <LangProvider>
