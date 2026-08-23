@@ -65,7 +65,6 @@ function Entry({
         alt={project.imageAlt}
         ratio={ratio}
         sizes={sizes}
-        amount={4}
         objectPosition="top"
       />
 
