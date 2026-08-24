@@ -200,17 +200,6 @@ export const en = {
     downloadCv: "Download CV",
     groups: [
       {
-        year: "2026",
-        items: [
-          {
-            role: "Frontend & DevOps Developer",
-            org: "Ciptaware",
-            detail:
-              "Built the agency landing page and shipped it to production: frontend work focused on animation quality and smooth scrolling, plus the devops side — CI/CD pipeline and deployment.",
-          },
-        ],
-      },
-      {
         year: "2025",
         items: [
           {
@@ -406,17 +395,6 @@ export const id: typeof en = {
     heading: "Pengalaman",
     downloadCv: "Unduh CV",
     groups: [
-      {
-        year: "2026",
-        items: [
-          {
-            role: "Frontend & DevOps Developer",
-            org: "Ciptaware",
-            detail:
-              "Membangun landing page agensi dengan fokus kualitas animasi dan smooth scroll, sekaligus menangani sisi devops: pipeline CI/CD dan deployment ke produksi.",
-          },
-        ],
-      },
       {
         year: "2025",
         items: [
