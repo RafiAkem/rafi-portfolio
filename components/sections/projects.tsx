@@ -39,6 +39,12 @@ const LAYOUT = [
     sizes: "(max-width: 1024px) 100vw, 88vw",
     lead: true,
   },
+  {
+    cell: "lg:col-span-5 lg:mt-20",
+    ratio: "aspect-[16/10]",
+    sizes: "(max-width: 1024px) 100vw, 36vw",
+    lead: false,
+  },
 ] as const;
 
 function Entry({
