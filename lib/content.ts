@@ -8,6 +8,7 @@ import type { StaticImageData } from "next/image";
 import mangmicroShot from "@/public/projects/mangmicro.webp";
 import mangquizShot from "@/public/projects/mangquiz.webp";
 import mangragShot from "@/public/projects/mangrag.webp";
+import nusagateShot from "@/public/projects/nusagate.webp";
 import ramblingsShot from "@/public/projects/akem-ramblings.webp";
 import portraitShot from "@/public/rafi.jpg";
 
@@ -193,6 +194,18 @@ export const en = {
       image: mangragShot,
       imageAlt: "MangRAG landing page with hero and chatbot demo",
       live: "https://mangrag.vercel.app",
+    },
+    {
+      slug: "nusagate",
+      title: "NusaGate",
+      kind: "AI Gateway",
+      summary:
+        "A commercial AI gateway with a single API for DeepSeek, GLM, and GPT models: local QRIS top-ups, per-model pricing, a wallet with atomic deduction, and production Midtrans payments.",
+      tags: ["Next.js", "Postgres", "Midtrans", "Payments"],
+      year: "2026",
+      image: nusagateShot,
+      imageAlt: "NusaGate landing page with live AI chat demo",
+      live: "https://nusagate.rafiakem.tech",
     },
   ],
   experience: {
