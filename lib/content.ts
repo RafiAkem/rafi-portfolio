@@ -97,8 +97,8 @@ export type ExperienceGroup = {
 export const en = {
   langName: "English",
   metaDescription:
-    "Fullstack web developer in Bandung. Building web apps and AI-powered systems with Next.js, TypeScript, and Laravel. Former intern at PT Telkom Indonesia.",
-  role: "Fullstack Web & AI Developer",
+    "Fullstack engineer in Bandung. Building web apps and AI-powered systems with Next.js, TypeScript, and Laravel. Former intern at PT Telkom Indonesia.",
+  role: "Fullstack Engineer",
   city: "Bandung, West Java",
   portraitAlt: "Portrait of Rafi Ikhsanul Hakim",
   headlineLines: [
@@ -216,7 +216,7 @@ export const en = {
         year: "2025",
         items: [
           {
-            role: "Fullstack Web Developer Intern",
+            role: "Fullstack Engineer Intern",
             org: "PT Telkom Indonesia (Persero) Tbk",
             period: "Jul - Sep 2025",
             detail:
@@ -307,8 +307,8 @@ export const en = {
 export const id: typeof en = {
   langName: "Bahasa Indonesia",
   metaDescription:
-    "Fullstack web developer di Bandung. Membangun aplikasi web dan sistem berbasis AI dengan Next.js, TypeScript, dan Laravel. Eks-intern di PT Telkom Indonesia.",
-  role: "Fullstack Web & AI Developer",
+    "Fullstack engineer di Bandung. Membangun aplikasi web dan sistem berbasis AI dengan Next.js, TypeScript, dan Laravel. Eks-intern di PT Telkom Indonesia.",
+  role: "Fullstack Engineer",
   city: "Bandung, Jawa Barat",
   portraitAlt: "Potret Rafi Ikhsanul Hakim",
   headlineLines: [
@@ -412,7 +412,7 @@ export const id: typeof en = {
         year: "2025",
         items: [
           {
-            role: "Fullstack Web Developer Intern",
+            role: "Fullstack Engineer Intern",
             org: "PT Telkom Indonesia (Persero) Tbk",
             period: "Jul - Sep 2025",
             detail:

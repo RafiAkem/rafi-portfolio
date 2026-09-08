@@ -12,8 +12,8 @@ import { ContributionPlate } from "@/components/contribution-plate";
  * Public code, reported rather than advertised.
  *
  * Two figures do the work here and neither is a scoreboard number. Language
- * share by bytes is the load-bearing one: it turns "Fullstack Web & AI
- * Developer" from an assertion into something a reader can check. The activity
+ * share by bytes is the load-bearing one: it turns "Fullstack Engineer"
+ * from an assertion into something a reader can check. The activity
  * plate is the second, and it is only defensible next to the scope note above
  * it, because public repositories are not where the client work lives.
  *
