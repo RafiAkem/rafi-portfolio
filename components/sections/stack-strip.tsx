@@ -5,9 +5,10 @@ import { useLang } from "@/components/lang-provider";
 import { Reveal } from "@/components/reveal";
 
 /**
- * Brand marks come from the Simple Icons CDN and are used as CSS masks, so a
- * single element per logo picks up the current text color in both themes.
- * To go offline, vendor the SVGs into /public/logos and swap the mask URL.
+ * Brand marks are vendored into /public/logos (Simple Icons, 24x24) and used
+ * as CSS masks, so a single element per logo picks up the current text color
+ * in both themes. No third-party CDN at paint time — the SVGs ship with the
+ * bundle, so a flaky icon CDN can never stall the section.
  */
 export function StackStrip() {
   const { t } = useLang();
@@ -20,7 +21,7 @@ export function StackStrip() {
       <Reveal className="mx-auto max-w-[1360px] px-5 py-9 sm:px-10 sm:py-10">
         <ul className="flex flex-wrap items-center gap-x-10 gap-y-7 sm:gap-x-14">
           {stack.map((tech) => {
-            const url = `https://cdn.simpleicons.org/${tech.slug}`;
+            const url = `/logos/${tech.slug}.svg`;
             return (
               <li key={tech.slug}>
                 <span
