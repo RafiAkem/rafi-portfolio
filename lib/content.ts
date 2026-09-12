@@ -144,7 +144,7 @@ export const en = {
     ],
   },
   projectsIntro:
-    "Four shipped products, all publicly accessible. Two are about learning, one about writing, and one for teams building chatbots for their clients. I did the entire process myself, from interface design to deployment.",
+    "Five shipped products, all publicly accessible. Two are about learning, one about writing, one for teams building chatbots for their clients, and one a commercial AI gateway. I did the entire process myself, from interface design to deployment.",
   projects: [
     {
       slug: "mangmicro",
@@ -352,7 +352,7 @@ export const id: typeof en = {
     ],
   },
   projectsIntro:
-    "Empat produk yang sudah dirilis dan dapat diakses publik. Dua berkaitan dengan cara belajar, satu dengan cara menulis, dan satu untuk tim yang membangun chatbot bagi kliennya. Seluruh prosesnya saya kerjakan sendiri, dari desain antarmuka hingga deployment.",
+    "Lima produk yang sudah dirilis dan dapat diakses publik. Dua berkaitan dengan cara belajar, satu dengan cara menulis, satu untuk tim yang membangun chatbot bagi kliennya, dan satu lagi gateway AI komersial. Seluruh prosesnya saya kerjakan sendiri, dari desain antarmuka hingga deployment.",
   projects: [
     {
       slug: "mangmicro",
