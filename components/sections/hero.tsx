@@ -56,7 +56,12 @@ export function Hero() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const projects = t.projects;
-  const active = projects[index];
+  // Defensive floor: the two dictionaries must keep their project arrays the
+  // same length. If they ever drift, index can point past the shorter array
+  // (e.g. cycling to position 4 on a 4-item id list after NusaGate joined en)
+  // and `projects[index]` is undefined, which crashes the whole React tree.
+  // Fall back to the first project instead of rendering a dead reference.
+  const active = projects[index] ?? projects[0];
   const slots = projects.map((_, i) => ({
     x: i * SLOT_STEP.x,
     y: i * SLOT_STEP.y,

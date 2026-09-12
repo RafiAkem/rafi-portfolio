@@ -403,6 +403,18 @@ export const id: typeof en = {
       imageAlt: "Halaman depan MangRAG dengan hero dan demo chatbot",
       live: "https://mangrag.vercel.app",
     },
+    {
+      slug: "nusagate",
+      title: "NusaGate",
+      kind: "AI Gateway",
+      summary:
+        "Gateway AI komersial dengan satu API untuk model DeepSeek, GLM, dan GPT: top-up QRIS lokal, harga per model, wallet dengan deduksi atomik, dan pembayaran Midtrans produksi.",
+      tags: ["Next.js", "Postgres", "Midtrans", "Pembayaran"],
+      year: "2026",
+      image: nusagateShot,
+      imageAlt: "Halaman depan NusaGate dengan demo chat AI langsung",
+      live: "https://nusagate.rafiakem.tech",
+    },
   ],
   experience: {
     heading: "Pengalaman",
