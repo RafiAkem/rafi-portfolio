@@ -22,5 +22,5 @@ jobs:
           ssh -i ~/.ssh/deploy_key \
             -o IdentitiesOnly=yes \
             -o StrictHostKeyChecking=accept-new \
-            ubuntu@43.134.40.53 \
+            ubuntu@43.156.98.81 \
             'echo "[ci] konek via deploy key; forced command di server yang deploy"'
