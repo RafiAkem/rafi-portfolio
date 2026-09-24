@@ -1,5 +1,17 @@
 name: Deploy ke VPS
 
+# Build di GitHub runner, kirim HANYA hasil build ke VPS. VPS tidak pernah
+# menjalankan `npm ci` atau `next build` lagi, jadi box 2GB tidak bisa OOM-kill
+# 9Router di tengah build.
+#
+# Bentuk artefak: `output: "standalone"` di next.config menghasilkan
+# .next/standalone (server.js + ~40MB node_modules yang benar-benar dipakai).
+# .next/static dan public/ TIDAK ikut dari Next dan harus disalin di sini —
+# tanpa keduanya situs tampil tanpa CSS/gambar.
+#
+# .env.local milik VPS (RESEND_API_KEY, GITHUB_TOKEN) dipertahankan: rsync
+# mengecualikan `.env*` supaya deploy tidak mungkin menghapusnya.
+
 on:
   push:
     branches: [master]
@@ -7,20 +19,60 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    # Di-pin, jangan ubuntu-latest: node_modules + binary native sharp dari build
+    # ini dikirim ke VPS, dan glibc hanya kompatibel ke depan. Box-nya Ubuntu
+    # 24.04, jadi build di 24.04. Naikkan keduanya bersamaan atau app rusak saat
+    # runtime (bukan saat build, yang jauh lebih sulit didiagnosa).
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
-      # Tidak perlu checkout: VPS menarik repo dari GitHub sendiri.
-      # Deploy key di VPS di-restrict (command=) jadi HANYA bisa menjalankan
-      # /home/ubuntu/deploy-rafi-portfolio.sh — bukan shell interaktif.
-      - name: Jalankan deploy di VPS
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Build
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Susun artefak
+        run: |
+          set -euo pipefail
+          test -f .next/standalone/server.js || { echo "standalone output tidak ada"; exit 1; }
+          mkdir -p .next/standalone/.next
+          cp -r .next/static .next/standalone/.next/static
+          [ -d public ] && cp -r public .next/standalone/public
+          echo "ukuran artefak: $(du -sh .next/standalone | cut -f1)"
+
+      - name: Kirim ke VPS
         env:
           VPS_KEY: ${{ secrets.VPS_SSH_KEY }}
         run: |
+          set -euo pipefail
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          printf '%s\n' "$VPS_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh -i ~/.ssh/deploy_key \
-            -o IdentitiesOnly=yes \
-            -o StrictHostKeyChecking=accept-new \
-            ubuntu@43.156.98.81 \
-            'echo "[ci] konek via deploy key; forced command di server yang deploy"'
+          printf '%s\n' "$VPS_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          # rsync TIDAK mewarisi `ssh -i`; harus lewat -e.
+          # --exclude='.env*' melindungi .env.local milik VPS dari --delete.
+          rsync -az --delete --exclude='.env*' \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new" \
+            .next/standalone/ ubuntu@43.156.98.81:/home/ubuntu/rafi-portfolio/
+
+      - name: Restart dan verifikasi
+        env:
+          VPS_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$VPS_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes ubuntu@43.156.98.81 \
+            'export PM2_HOME=/home/ubuntu/.pm2; pm2 restart rafi-portfolio >/dev/null 2>&1; sleep 6; pm2 list --no-color | grep rafi-portfolio'
+          # Job hijau bukan bukti deploy berhasil — pastikan dari respons live.
+          echo "build id di box: $(ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes ubuntu@43.156.98.81 'cat /home/ubuntu/rafi-portfolio/.next/BUILD_ID')"
+          code=$(curl -s -o /dev/null -w '%{http_code}' -m 20 https://rafiakem.tech/)
+          echo "HTTP live: $code"
+          [ "$code" = "200" ] || { echo "situs live tidak 200"; exit 1; }
