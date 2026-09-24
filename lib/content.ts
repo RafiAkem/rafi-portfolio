@@ -1,5 +1,7 @@
 import type { StaticImageData } from "next/image";
 
+import { legalCopy } from "@/lib/legal";
+
 /**
  * Screenshots are imported rather than referenced by path so Next reads their
  * real intrinsic size at build time and generates a blur placeholder. Without
@@ -302,6 +304,7 @@ export const en = {
     body: "The address may be wrong, or the page has moved.",
     backHome: "Back to home",
   },
+  legal: legalCopy.en,
 };
 
 export const id: typeof en = {
@@ -510,6 +513,7 @@ export const id: typeof en = {
     body: "Alamat yang Anda tuju mungkin keliru, atau halamannya sudah dipindahkan.",
     backHome: "Kembali ke beranda",
   },
+  legal: legalCopy.id,
 };
 
 export const dictionaries: Record<Lang, typeof en> = { en, id };
