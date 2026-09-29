@@ -42,7 +42,10 @@ export const profile = {
   portrait: portraitShot,
   /** Absolute-path form, for metadata and JSON-LD where a URL is required. */
   portraitPath: "/rafi.jpg",
-  cvUrl: "/cv-rafi-ikhsanul-hakim.pdf",
+  cvUrl: {
+    en: "/cv-rafi-ikhsanul-hakim-en.pdf",
+    id: "/cv-rafi-ikhsanul-hakim.pdf",
+  },
 };
 
 export const socials = [

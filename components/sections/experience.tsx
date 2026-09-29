@@ -6,7 +6,7 @@ import { useLang } from "@/components/lang-provider";
 import { Reveal } from "@/components/reveal";
 
 export function Experience() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const credentials = [t.experience.education, t.experience.organization] as const;
 
   return (
@@ -18,7 +18,7 @@ export function Experience() {
         <div className="flex flex-wrap items-end justify-between gap-6 border-b border-border pb-6">
           <h2 className="display text-[clamp(1.625rem,3.4vw,2.75rem)]">{t.experience.heading}</h2>
           <a
-            href={profile.cvUrl}
+            href={profile.cvUrl[lang]}
             className="folio-caps inline-flex items-center gap-2 border border-border-strong px-4 py-2.5 whitespace-nowrap transition-colors duration-200 hover:border-accent hover:text-accent"
           >
             <DownloadSimple size={13} weight="regular" aria-hidden />
