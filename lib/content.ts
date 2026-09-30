@@ -205,7 +205,7 @@ export const en = {
       title: "NusaGate",
       kind: "AI Gateway",
       summary:
-        "A commercial AI gateway with a single API for DeepSeek, GLM, and GPT models: local QRIS top-ups, per-model pricing, a wallet with atomic deduction, and production Midtrans payments.",
+        "A commercial AI gateway priced in rupiah: one drop-in endpoint fronting ten models from DeepSeek, GLM, and Google at 55-77% below the vendors' own token rates. QRIS top-ups from Rp 10k settle on Midtrans webhooks, balance is deducted atomically per request, prepaid Coding Plans hand back more API credit than they cost, and a drained balance returns 402 instead of 500. Measured on 30 Sep 2026: 81 accounts, 30 active, 36,500+ requests, Rp 536k collected, and a 1-billion-token subsidised pool claimed 6,900 times and exhausted within a day.",
       tags: ["Next.js", "Postgres", "Midtrans", "Payments"],
       year: "2026",
       image: nusagateShot,
@@ -414,7 +414,7 @@ export const id: typeof en = {
       title: "NusaGate",
       kind: "AI Gateway",
       summary:
-        "Gateway AI komersial dengan satu API untuk model DeepSeek, GLM, dan GPT: top-up QRIS lokal, harga per model, wallet dengan deduksi atomik, dan pembayaran Midtrans produksi.",
+        "Gateway AI komersial dengan harga rupiah: satu endpoint drop-in untuk sepuluh model DeepSeek, GLM, dan Google, 55-77% lebih murah dari harga token resmi vendornya. Topup QRIS mulai Rp10rb masuk otomatis lewat webhook Midtrans, saldo dipotong atomik per request, Coding Plan prabayar mengembalikan kredit API lebih besar dari harganya, dan saldo yang habis dijawab 402 bukan 500. Terukur per 30 Sep 2026: 81 akun, 30 aktif, 36.500+ request, Rp536rb terkumpul, dan pool kredit subsidi 1 miliar token diklaim 6.900 kali lalu habis dalam sehari.",
       tags: ["Next.js", "Postgres", "Midtrans", "Pembayaran"],
       year: "2026",
       image: nusagateShot,
