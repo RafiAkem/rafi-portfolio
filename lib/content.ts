@@ -193,11 +193,11 @@ export const en = {
       title: "MangRAG",
       kind: "RAG SaaS",
       summary:
-        "A SaaS for building RAG chatbots that clients install with a single snippet: upload a PDF, the system builds a knowledge base, and answers always cite their sources. Includes cross-instance rate limiting, multi-user auth, and a bot readiness score.",
+        "A SaaS that puts an answer bot on a business's own site, trained on its own documents: upload a catalogue or FAQ, paste one line of code, and every reply cites its source. Bots wear the client's own colours and greeting, run only on domains the owner allows, and start answering in the first second. Sold on monthly plans from IDR 75k to IDR 999k.",
       tags: ["Next.js", "Supabase", "Gemini", "RAG"],
       year: "2026",
       image: mangragShot,
-      imageAlt: "MangRAG landing page with hero and chatbot demo",
+      imageAlt: "MangRAG landing page with an illustrated hero and the demo chatbot answering from a sample store",
       live: "https://mangrag.vercel.app",
     },
     {
@@ -402,11 +402,11 @@ export const id: typeof en = {
       title: "MangRAG",
       kind: "RAG SaaS",
       summary:
-        "SaaS untuk membuat chatbot RAG yang dipasang klien lewat satu baris snippet: upload PDF, sistem membangun knowledge base, dan jawaban selalu menyertakan sitasi sumber. Dilengkapi rate limit lintas instance, autentikasi multi-user, dan skor kesiapan bot.",
+        "SaaS yang memasang bot penjawab di website bisnis, dijawab dari dokumennya sendiri: unggah katalog atau FAQ, tempel satu baris kode, dan setiap jawaban menyebut sumbernya. Bot memakai warna dan sapaan milik klien, hanya hidup di domain yang diizinkan pemiliknya, dan mulai menjawab sejak detik pertama. Dijual dengan paket bulanan Rp75rb sampai Rp999rb.",
       tags: ["Next.js", "Supabase", "Gemini", "RAG"],
       year: "2026",
       image: mangragShot,
-      imageAlt: "Halaman depan MangRAG dengan hero dan demo chatbot",
+      imageAlt: "Halaman depan MangRAG dengan hero ilustrasi dan demo chatbot menjawab dari toko contoh",
       live: "https://mangrag.vercel.app",
     },
     {
