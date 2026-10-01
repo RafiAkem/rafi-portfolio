@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { ArrowUpRight, DownloadSimple } from "@phosphor-icons/react/dist/ssr";
 import {
   motion,
   useMotionValue,
@@ -49,7 +49,7 @@ const SLOT_STEP = { x: 16, y: -13, rotate: 1.2 } as const;
  * prefers-reduced-motion.
  */
 export function Hero() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const reduce = useReducedMotion();
   const section = useRef<HTMLElement>(null);
 
@@ -191,6 +191,13 @@ export function Hero() {
                 className="folio-caps bg-accent px-6 py-3.5 whitespace-nowrap text-on-accent transition-colors duration-200 hover:bg-accent-hover"
               >
                 {t.hero.viewProjects}
+              </a>
+              <a
+                href={profile.cvUrl[lang]}
+                className="folio-caps inline-flex items-center gap-2 border border-border-strong px-6 py-3.5 whitespace-nowrap transition-colors duration-200 hover:border-accent hover:text-accent"
+              >
+                <DownloadSimple size={13} weight="regular" aria-hidden />
+                {t.hero.downloadCv}
               </a>
               <a
                 href="#kontak"

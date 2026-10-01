@@ -128,6 +128,7 @@ export const en = {
   skipLink: "Skip to content",
   hero: {
     viewProjects: "View projects",
+    downloadCv: "Download CV",
     viewSite: "View site",
     openSite: "Open site",
   },
@@ -215,7 +216,6 @@ export const en = {
   ],
   experience: {
     heading: "Experience",
-    downloadCv: "Download CV",
     groups: [
       {
         year: "2025",
@@ -337,6 +337,7 @@ export const id: typeof en = {
   skipLink: "Lompat ke konten",
   hero: {
     viewProjects: "Lihat proyek",
+    downloadCv: "Unduh CV",
     viewSite: "Lihat situs",
     openSite: "Buka situs",
   },
@@ -424,7 +425,6 @@ export const id: typeof en = {
   ],
   experience: {
     heading: "Pengalaman",
-    downloadCv: "Unduh CV",
     groups: [
       {
         year: "2025",
