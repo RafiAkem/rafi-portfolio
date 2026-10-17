@@ -71,6 +71,15 @@ jobs:
           printf '%s\n' "$VPS_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes ubuntu@43.156.98.81 \
             'export PM2_HOME=/home/ubuntu/.pm2; pm2 restart rafi-portfolio >/dev/null 2>&1; sleep 6; pm2 list --no-color | grep rafi-portfolio'
+          # `pm2 restart` alone does NOT load .env.local: without the file sourced and
+          # --update-env, GITHUB_TOKEN is missing at runtime and the activity section
+          # silently falls back to the committed snapshot.
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes ubuntu@43.156.98.81 \
+            'set -e; cd /home/ubuntu/rafi-portfolio; set -a; . ./.env.local; set +a; export PM2_HOME=/home/ubuntu/.pm2; pm2 restart rafi-portfolio --update-env >/dev/null 2>&1; pm2 save >/dev/null 2>&1; sleep 6; pm2 list --no-color | grep rafi-portfolio'
+          # Fail loudly instead of serving a stale snapshot: the token must be in the
+          # running process, not merely in the file on disk.
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes ubuntu@43.156.98.81 \
+            'export PM2_HOME=/home/ubuntu/.pm2; P=$(pm2 pid rafi-portfolio); tr "\0" "\n" < /proc/$P/environ | grep -q "^GITHUB_TOKEN=" && echo "runtime env: GITHUB_TOKEN ada" || { echo "runtime env: GITHUB_TOKEN HILANG"; exit 1; }'
           # Job hijau bukan bukti deploy berhasil — pastikan dari respons live.
           echo "build id di box: $(ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes ubuntu@43.156.98.81 'cat /home/ubuntu/rafi-portfolio/.next/BUILD_ID')"
           code=$(curl -s -o /dev/null -w '%{http_code}' -m 20 https://rafiakem.tech/)
