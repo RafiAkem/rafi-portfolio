@@ -4,11 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight, DownloadSimple } from "@phosphor-icons/react/dist/ssr";
 import {
+  AnimatePresence,
   motion,
-  useMotionValue,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
 } from "motion/react";
 import { profile } from "@/lib/content";
@@ -17,36 +16,25 @@ import { HalftoneField } from "@/components/halftone-field";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/** How long each project holds the top of the pile. */
-const CYCLE_MS = 4800;
+/** How long each product holds the preview. */
+const CYCLE_MS = 4200;
 
 /**
- * Resting transform per depth slot, front first. Slots are generated inside
- * the component to match the project count so every plate owns a unique
- * position (a clamped hardcoded list meant two cards shared one slot and
- * overlapped). Pure 2D fan on purpose: a 3D rotateY brings the back plates
- * closer to the viewer than the front plate, depth-sorting overrides
- * z-index, and the back plate bleeds over the front one.
- */
-const SLOT_STEP = { x: 16, y: -13, rotate: 1.2 } as const;
-
-/**
- * Editorial hero. The type states the claim, the plates prove it with the
- * three products that are running right now.
+ * Editorial hero. The type states the claim, the index proves it with the
+ * products that are running right now.
  *
- * Five motion jobs, each with a reason:
+ * Four motion jobs, each with a reason:
  *   1. Headline lines rise out of a mask, so the sentence is read in order.
  *   2. A second ink plate sits out of register behind the headline and pulls
  *      into register on load. Two-colour printing is the whole conceit of the
  *      page, so the page shows itself being printed.
- *   3. The plates arrive after the sentence lands, in reading order.
- *   4. The top plate turns to the back of the pile on a timer, so all three
- *      get seen without asking the visitor to click anything.
- *   5. Pointer tilt, the halftone screen and scroll drift separate the plate
- *      layer from the type layer, which is what gives flat paper depth.
+ *   3. The preview is wiped in from the bottom like a fresh sheet laid over
+ *      the last one, on a timer, so every product gets seen without asking
+ *      the visitor to click anything. A hairline under the active row is the
+ *      timer made visible.
+ *   4. Hovering or focusing a row takes over the preview and holds it.
  *
- * Everything collapses to one static plate and a still screen under
- * prefers-reduced-motion.
+ * Everything collapses to a still first product under prefers-reduced-motion.
  */
 export function Hero() {
   const { t, lang } = useLang();
@@ -56,47 +44,33 @@ export function Hero() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const projects = t.projects;
-  // Defensive floor: the two dictionaries must keep their project arrays the
-  // same length. If they ever drift, index can point past the shorter array
-  // (e.g. cycling to position 4 on a 4-item id list after NusaGate joined en)
-  // and `projects[index]` is undefined, which crashes the whole React tree.
-  // Fall back to the first project instead of rendering a dead reference.
+  // The two dictionaries keep their project arrays the same length, but if
+  // they ever drift `index` can point past the shorter one. Fall back to the
+  // first project instead of crashing the tree on a dead reference.
   const active = projects[index] ?? projects[0];
-  const slots = projects.map((_, i) => ({
-    x: i * SLOT_STEP.x,
-    y: i * SLOT_STEP.y,
-    rotate: i * SLOT_STEP.rotate,
-    rotateY: 0,
-  }));
 
+  // A timeout keyed on the index (not an interval) so the progress hairline
+  // and the swap always start from the same moment, including after a hover
+  // has moved the index by hand.
   useEffect(() => {
     if (reduce || paused || projects.length < 2) return;
-    const id = window.setInterval(
+    const id = window.setTimeout(
       () => setIndex((i) => (i + 1) % projects.length),
       CYCLE_MS,
     );
-    return () => window.clearInterval(id);
-  }, [reduce, paused]);
+    return () => window.clearTimeout(id);
+  }, [reduce, paused, index, projects.length]);
 
   const { scrollYProgress } = useScroll({
     target: section,
     offset: ["start start", "end start"],
   });
   const copyY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
-  const plateY = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
+  const indexY = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
 
-  // Pointer tilt lives on motion values so it never re-renders the tree.
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
-  const spring = { stiffness: 140, damping: 18, mass: 0.6 };
-  const tiltY = useSpring(useTransform(pointerX, [-0.5, 0.5], [-8, 8]), spring);
-  const tiltX = useSpring(useTransform(pointerY, [-0.5, 0.5], [6, -6]), spring);
-
-  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-    if (reduce || event.pointerType !== "mouse") return;
-    const box = event.currentTarget.getBoundingClientRect();
-    pointerX.set((event.clientX - box.left) / box.width - 0.5);
-    pointerY.set((event.clientY - box.top) / box.height - 0.5);
+  function take(i: number) {
+    setIndex(i);
+    setPaused(true);
   }
 
   return (
@@ -214,120 +188,118 @@ export function Hero() {
             transition={{ duration: 0.9, delay: 0.36, ease: EASE }}
             className="lg:col-span-5"
           >
-            <motion.div style={reduce ? undefined : { y: plateY }}>
-              {/* Reserve the room the stacked plates offset into. */}
-              <div
-                className="mx-auto w-full max-w-[540px] pt-12 pr-12 lg:max-w-none"
-                style={{ perspective: 1600 }}
-                onPointerMove={handlePointerMove}
-                onPointerLeave={() => {
-                  pointerX.set(0);
-                  pointerY.set(0);
-                  setPaused(false);
-                }}
-                onPointerEnter={() => setPaused(true)}
-                onFocusCapture={() => setPaused(true)}
-                onBlurCapture={() => setPaused(false)}
-              >
-                <motion.div
-                  style={
-                    reduce
-                      ? undefined
-                      : {
-                          rotateX: tiltX,
-                          rotateY: tiltY,
-                        }
-                  }
-                  className="relative aspect-[16/10] w-full"
-                >
-                  {projects.map((project, i) => {
-                    const slot = (i - index + projects.length) % projects.length;
-                    const rest = slots[slot];
-                    const isFront = slot === 0;
-
-                    return (
-                      <motion.div
-                        key={project.slug}
-                        className="absolute inset-0"
-                        style={{
-                          zIndex: projects.length - slot,
-                          transformOrigin: "left center",
-                        }}
-                        animate={
-                          reduce
-                            ? {
-                                x: 0,
-                                y: 0,
-                                rotate: 0,
-                                rotateY: 0,
-                                opacity: isFront ? 1 : 0,
-                              }
-                            : { ...rest, opacity: 1 }
-                        }
-                        // Quick enough that the pile has resettled by the time
-                        // the caption below has finished swapping.
-                        transition={{
-                          type: "spring",
-                          stiffness: 230,
-                          damping: 27,
-                          mass: 0.8,
-                        }}
-                      >
-                        <a
-                          href={project.live}
-                          target="_blank"
-                          rel="noreferrer"
-                          aria-label={`${project.title}, ${project.kind}. ${t.hero.openSite}.`}
-                          aria-hidden={!isFront}
-                          tabIndex={isFront ? 0 : -1}
-                          className={`block h-full w-full overflow-hidden rounded-surface border border-border-strong bg-surface-raised transition-transform duration-300 ${
-                            isFront ? "hover:-translate-y-1.5" : "pointer-events-none"
-                          }`}
-                        >
-                          <Image
-                            src={project.image}
-                            alt={project.imageAlt}
-                            priority={i === 0}
-                            placeholder="blur"
-                            sizes="(max-width: 1024px) 90vw, 40vw"
-                            className="h-full w-full object-cover object-top"
-                          />
-                        </a>
-                      </motion.div>
-                    );
-                  })}
-                </motion.div>
+            <motion.div
+              style={reduce ? undefined : { y: indexY }}
+              onPointerLeave={() => setPaused(false)}
+              onBlurCapture={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget)) setPaused(false);
+              }}
+            >
+              {/* Preview. Each new sheet wipes up from the bottom edge over the
+                  last one, which stays put underneath until it is covered. */}
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-surface border border-border-strong bg-surface-raised">
+                <AnimatePresence initial={!reduce}>
+                  <motion.a
+                    key={active.slug}
+                    href={active.live}
+                    target="_blank"
+                    rel="noreferrer"
+                    tabIndex={-1}
+                    aria-hidden
+                    className="absolute inset-0 block"
+                    initial={reduce ? false : { clipPath: "inset(100% 0 0 0)" }}
+                    animate={{ clipPath: "inset(0% 0 0 0)" }}
+                    // Nearly-still exit: it only exists to keep the old sheet
+                    // mounted until the new one has finished covering it.
+                    exit={{ opacity: 0.99, transition: { duration: 0.9 } }}
+                    transition={{ duration: 0.9, ease: EASE }}
+                  >
+                    <motion.div
+                      className="h-full w-full"
+                      initial={reduce ? false : { scale: 1.08 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 1.4, ease: EASE }}
+                    >
+                      <Image
+                        src={active.image}
+                        alt=""
+                        priority={index === 0}
+                        placeholder="blur"
+                        sizes="(max-width: 1024px) 90vw, 40vw"
+                        className="h-full w-full object-cover object-top"
+                      />
+                    </motion.div>
+                  </motion.a>
+                </AnimatePresence>
               </div>
 
-              {/* Caption for the plate above. The link itself carries the same
-                  text for assistive tech, so this echo is hidden from it. */}
-              {/* Echo visual dari link card. Dijadikan link nyata (pointer/mobile
-                  tap target), tapi di-sembunyikan dari keyboard + screen reader
-                  (tabIndex=-1 + aria-hidden) karena link card udah bawa
-                  aria-label yang sama. */}
-              <a
-                href={active.live}
-                target="_blank"
-                rel="noreferrer"
-                aria-hidden
-                tabIndex={-1}
-                className="folio-caps mt-5 flex items-baseline gap-3 border-t border-border pt-3 pr-9 text-faint transition-colors duration-300 hover:text-accent"
-              >
-                <motion.span
-                  key={active.slug}
-                  initial={reduce ? false : { opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: EASE }}
-                  className="flex min-w-0 items-baseline gap-3"
-                >
-                  <span className="text-text">{active.title}</span>
-                  <span className="truncate">{active.kind}</span>
-                </motion.span>
-                <span className="ml-auto inline-flex shrink-0 items-center gap-1 whitespace-nowrap">
-                  {t.hero.viewSite}
-                  <ArrowUpRight size={11} weight="bold" />
-                </span>
-              </a>
+              <ul className="mt-6 border-t border-border">
+                {projects.map((project, i) => {
+                  const isActive = i === index;
+
+                  return (
+                    <li key={project.slug} className="relative border-b border-border">
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`${project.title}, ${project.kind}. ${t.hero.openSite}.`}
+                        onPointerEnter={(e) => {
+                          if (e.pointerType === "mouse") take(i);
+                        }}
+                        onFocus={() => take(i)}
+                        className="group flex items-baseline gap-4 py-3.5"
+                      >
+                        <span
+                          className={`folio w-6 shrink-0 transition-colors duration-300 ${
+                            isActive ? "text-accent" : "text-faint"
+                          }`}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span
+                          className={`display-sm text-[1.25rem] transition-[color,transform] duration-300 ease-out ${
+                            isActive
+                              ? "translate-x-1 text-text"
+                              : "text-muted group-hover:text-text"
+                          }`}
+                        >
+                          {project.title}
+                        </span>
+                        <span className="folio-caps ml-auto hidden truncate text-faint sm:inline">
+                          {project.kind}
+                        </span>
+                        <ArrowUpRight
+                          size={12}
+                          weight="bold"
+                          aria-hidden
+                          className={`shrink-0 self-center transition-all duration-300 ${
+                            isActive
+                              ? "translate-x-0 text-accent opacity-100"
+                              : "-translate-x-1 opacity-0"
+                          }`}
+                        />
+                      </a>
+
+                      {/* The timer made visible. Fills while this row holds the
+                          preview; sits full while a hover is holding it. */}
+                      {isActive && !reduce && (
+                        <motion.span
+                          key={`${project.slug}-${paused}`}
+                          aria-hidden
+                          className="absolute -bottom-px left-0 h-px w-full origin-left bg-accent"
+                          initial={{ scaleX: paused ? 1 : 0 }}
+                          animate={{ scaleX: 1 }}
+                          transition={{
+                            duration: paused ? 0 : CYCLE_MS / 1000,
+                            ease: "linear",
+                          }}
+                        />
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
             </motion.div>
           </motion.div>
         </div>

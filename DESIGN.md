@@ -140,8 +140,9 @@ radius, atau font baru tanpa mengubah dokumen ini dulu.
 - Lenis (smooth scroll) + Motion `useScroll` untuk parallax; dilarang
   `addEventListener("scroll")`
 - Reveal section: opacity 0→1, y 18px, `ease [0.16,1,0.3,1]`, 0.55s, once
-- Hero: mask reveal per baris, register ink kedua, tumpukan plat (spring
-  `230/27/0.8`), tilt pointer via motion values
+- Hero: mask reveal per baris, register ink kedua, preview produk yang
+  di-wipe dari bawah (clip-path, 0.9s) tiap 4.2s dengan hairline progres di
+  baris aktif; hover/fokus baris mengambil alih dan menahan preview
 - Halftone field: canvas 2D, DPR cap 1.5, ~30fps, IntersectionObserver stop,
   satu frame statis di bawah reduced motion
 - Semua motion gugur ke statis di bawah `prefers-reduced-motion`
