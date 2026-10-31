@@ -138,8 +138,9 @@ export const en = {
   about: {
     heading: "About me",
     paragraphs: [
-      "I build web applications end to end: internal company systems, client sites and operation panels, right through to learning products. The last one is what I have worked on the longest. MangMicro and MangQuiz started from the same problem: lecture material is too long, and the time to understand it is short.",
-      "My main focus is frontend, especially performance, readability, and keyboard accessibility. On the backend I work with Laravel, PostgreSQL, pgvector, and language model pipelines.",
+      "I build web apps end to end and ship them alone: interface, API, schema, deployment. Client work since 2024 taught me to start from whoever has to use the thing. MangMicro and MangQuiz came first, from one observation: lecture material is long, and the time to absorb it is short. The past year went into products built on language models that people pay for: MangRAG puts an answer bot on a business's own documents on monthly plans, while NusaGate meters and bills model traffic per request.",
+      "I work both ends of the stack and don't treat one as the interesting half: React and Next.js on the client, Laravel, PostgreSQL, pgvector, and retrieval pipelines on the server. Performance, readability, and keyboard accessibility are things I won't trade away, and on the server that same instinct shows up as answers that cite their source instead of guessing.",
+      "The work I want more of is LLM engineering rather than AI as a feature: retrieval that holds up against real questions, evaluation before shipping, and a cost per request low enough to charge for. MangRAG and NusaGate are already that; what I'm after next is harder versions of the same problem.",
     ],
     focus: [
       "Next.js App Router",
@@ -266,7 +267,7 @@ export const en = {
   },
   contact: {
     heading: "Let's connect",
-    body: "I'm open to fullstack and frontend roles, internships or full-time, as well as client projects. Send a message through the form, or reach me directly at the email below.",
+    body: "I'm open to fullstack, frontend, and AI engineering roles, internships or full-time, as well as client projects. Send a message through the form, or reach me directly at the email below.",
     emailLabel: "Email",
     locationLabel: "Location",
   },
@@ -347,8 +348,9 @@ export const id: typeof en = {
   about: {
     heading: "Tentang saya",
     paragraphs: [
-      "Saya mengerjakan aplikasi web secara end-to-end: sistem internal perusahaan, situs dan panel operasional klien, sampai produk pembelajaran. Yang terakhir adalah yang paling lama saya tekuni. MangMicro dan MangQuiz berangkat dari satu masalah yang sama: materi kuliah terlalu panjang, sementara waktu untuk memahaminya terbatas.",
-      "Fokus utama saya ada di frontend, terutama pada performa, keterbacaan, dan aksesibilitas keyboard. Di sisi backend saya terbiasa bekerja dengan Laravel, PostgreSQL, pgvector, dan pipeline model bahasa.",
+      "Saya membangun aplikasi web secara end-to-end dan mengirimkannya sendiri: antarmuka, API, skema basis data, deployment. Pekerjaan klien sejak 2024 mengajari saya untuk mulai dari orang yang harus memakainya. MangMicro dan MangQuiz datang lebih dulu, dari satu pengamatan: materi kuliah panjang, sementara waktu untuk menyerapnya pendek. Setahun terakhir habis untuk produk berbasis model bahasa yang orang bayar: MangRAG memasang bot penjawab di atas dokumen milik sebuah bisnis dengan paket bulanan, sementara NusaGate menagih dan mengukur trafik model per request.",
+      "Saya bekerja di kedua ujung stack dan tidak menganggap salah satunya lebih menarik: React dan Next.js di sisi klien, Laravel, PostgreSQL, pgvector, dan pipeline retrieval di sisi server. Performa, keterbacaan, dan aksesibilitas keyboard adalah hal yang tidak saya tukar, dan di sisi server naluri yang sama muncul sebagai jawaban yang menyebut sumbernya, bukan menebak.",
+      "Pekerjaan yang ingin saya perbanyak adalah rekayasa LLM, bukan AI sebagai fitur tempelan: retrieval yang tetap akurat untuk pertanyaan nyata, evaluasi sebelum rilis, dan biaya per request yang cukup rendah untuk dijual. MangRAG dan NusaGate sudah seperti itu; yang saya cari berikutnya adalah versi yang lebih sulit dari masalah yang sama.",
     ],
     focus: [
       "Next.js App Router",
@@ -475,7 +477,7 @@ export const id: typeof en = {
   },
   contact: {
     heading: "Mari terhubung",
-    body: "Saya terbuka untuk peran fullstack maupun frontend, magang atau penuh waktu, serta proyek klien. Silakan kirim pesan melalui formulir di samping, atau langsung ke alamat email di bawah.",
+    body: "Saya terbuka untuk peran fullstack, frontend, maupun rekayasa AI, magang atau penuh waktu, serta proyek klien. Silakan kirim pesan melalui formulir di samping, atau langsung ke alamat email di bawah.",
     emailLabel: "Email",
     locationLabel: "Domisili",
   },
