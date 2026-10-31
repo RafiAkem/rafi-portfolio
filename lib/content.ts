@@ -35,7 +35,7 @@ export const profile = {
   shortName: "Rafi",
   handle: "RafiAkem",
   email: "contact@rafiakem.tech",
-  blog: "https://akemramblings.dev",
+  blog: "https://ramblings.rafiakem.tech",
   github: "https://github.com/RafiAkem",
   linkedin: "https://www.linkedin.com/in/rafi-ikhsanul-hakim/",
   /** Avatar pulled from the GitHub profile, so it stays a real photo. */
@@ -188,7 +188,7 @@ export const en = {
       year: "2026",
       image: ramblingsShot,
       imageAlt: "Akem's Ramblings landing page with title and latest posts",
-      live: "https://akemramblings.dev",
+      live: "https://ramblings.rafiakem.tech",
     },
     {
       slug: "mangrag",
@@ -398,7 +398,7 @@ export const id: typeof en = {
       year: "2026",
       image: ramblingsShot,
       imageAlt: "Halaman depan Akem's Ramblings dengan judul dan tulisan terbaru",
-      live: "https://akemramblings.dev",
+      live: "https://ramblings.rafiakem.tech",
     },
     {
       slug: "mangrag",
