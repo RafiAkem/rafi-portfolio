@@ -113,7 +113,7 @@ export const en = {
   /** Hero standfirst. Leads with credentials, because that is what a reader
    *  scanning a portfolio for thirty seconds is actually looking for. */
   subheadline:
-    "Informatics student at Universitas Pasundan with fullstack internship experience at PT Telkom Indonesia. Open to new roles and projects.",
+    "Informatics graduate from Universitas Pasundan with fullstack internship experience at PT Telkom Indonesia. Open to new roles and projects.",
   nav: [
     { label: "About", href: "#tentang" },
     { label: "Projects", href: "#proyek" },
@@ -323,7 +323,7 @@ export const id: typeof en = {
     [{ text: "dan sistem " }, { text: "berbasis AI.", italic: true }],
   ],
   subheadline:
-    "Mahasiswa Teknik Informatika Universitas Pasundan dengan pengalaman internship fullstack di PT Telkom Indonesia. Terbuka untuk peran dan proyek baru.",
+    "Lulusan Teknik Informatika Universitas Pasundan dengan pengalaman internship fullstack di PT Telkom Indonesia. Terbuka untuk peran dan proyek baru.",
   nav: [
     { label: "Tentang", href: "#tentang" },
     { label: "Proyek", href: "#proyek" },
